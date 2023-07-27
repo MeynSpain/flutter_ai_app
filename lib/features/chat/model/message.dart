@@ -1,0 +1,53 @@
+import 'package:dart_openai/dart_openai.dart';
+
+class Message {
+  late String _content;
+  late String _author;
+  late DateTime _date;
+  late OpenAIChatMessageRole _role;
+
+  Message({required OpenAIChatCompletionChoiceMessageModel message}) {
+    _content = message.content;
+    _author = message.role.name;
+    _date = DateTime.now();
+    _role = message.role;
+  }
+
+
+  Message.fromUser({required content, required author}) {
+    _content = content;
+    _author = author;
+    _date = DateTime.now();
+    _role = OpenAIChatMessageRole.user;
+  }
+
+  DateTime get date => _date;
+
+  set date(DateTime value) {
+    _date = value;
+  }
+
+  String get author => _author;
+
+  set author(String value) {
+    _author = value;
+  }
+
+  String get content => _content;
+
+  set content(String value) {
+    _content = value;
+  }
+
+  OpenAIChatMessageRole get role => _role;
+
+  set role(OpenAIChatMessageRole value) {
+    _role = value;
+  }
+
+  @override
+  String toString() {
+    return 'Message{_content: $_content, _author: $_author, _date: $_date, _role: $_role}';
+  }
+
+}

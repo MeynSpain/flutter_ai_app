@@ -1,18 +1,25 @@
 # flutter_ai
 
-A new Flutter project.
+Общение с ChatGPT
 
-## Getting Started
+# Задачи проекта
+1. Возможность писать сообщения
+2. Получать ответ от ChatGPT
+3. Сохранять контекст беседы(хотя бы последние 10 сообщений)
+4. Хранить историю сообщений  
+4.1 Если хранить историю локально, то сделать возможность настроить объем хранения  
+4.2 Возможность почистить историю  
+5. Сделать различные чаты  
+5.1 Сами чаты  
+5.2 Удаление чатов
+6. Сделать визуал  
+6.1 Экран диалога  
+6.2 Выбор чатов  
+6.3 Настройки   
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-ChatGPT API - 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
+## Таблица в которой будет хранится история
+1. id
+2. chatName
+3. text
+4. role
+5. date

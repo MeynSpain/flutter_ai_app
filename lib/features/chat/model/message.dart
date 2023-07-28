@@ -13,6 +13,23 @@ class Message {
     _role = message.role;
   }
 
+  Message.simple(
+      {required content, required author, required date, required role}) {
+    _content = content;
+    _author = author;
+    _date = date;
+    switch (role) {
+      case 'user':
+        _role = OpenAIChatMessageRole.user;
+        break;
+      case 'assistant':
+        _role = OpenAIChatMessageRole.assistant;
+        break;
+      case 'system':
+        _role = OpenAIChatMessageRole.system;
+        break;
+    }
+  }
 
   Message.fromUser({required content, required author}) {
     _content = content;
@@ -49,5 +66,4 @@ class Message {
   String toString() {
     return 'Message{_content: $_content, _author: $_author, _date: $_date, _role: $_role}';
   }
-
 }

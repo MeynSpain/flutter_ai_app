@@ -1,10 +1,10 @@
-
-import 'package:flutter_ai/core/services/chat_gpt_service.dart';
 import 'package:flutter_ai/features/chat/bloc/chat_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
+
+import 'chats/gpt/gpt.dart';
 
 /// Инстанс [GetIt]
 final GetIt getIt = GetIt.instance;
@@ -18,6 +18,15 @@ Future<void> init() async {
   getIt.registerSingleton(talker);
   getIt<Talker>().info('Application started...');
 
+  ChatGptService chatGptService = ChatGptService();
+  getIt.registerSingleton(chatGptService);
+
+  // Register ChatBloc
+  getIt
+      .registerLazySingleton<ChatBloc>(() => ChatBloc(chatGptService: getIt()));
+
+
+
   //Talker bloc logger
   Bloc.observer = TalkerBlocObserver(
       talker: talker,
@@ -25,13 +34,6 @@ Future<void> init() async {
         printEventFullData: false,
         printStateFullData: false,
       ));
-
-  ChatGptService chatGptService = ChatGptService();
-  getIt.registerSingleton(chatGptService);
-
-
-  // Register bloc
-  getIt.registerLazySingleton<ChatBloc>(() => ChatBloc(chatGptService: getIt()));
 }
 
 // OpenAI.baseUrl = 'https://api.openai.com/v1/chat/completions';

@@ -3,4 +3,6 @@ enum Status {
   loading,
   success,
   error,
+  chatsLoaded,
+  chatsLoading,
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 final darkTheme = ThemeData(
-  scaffoldBackgroundColor: const Color.fromARGB(255, 31, 31, 31),
-
+  // scaffoldBackgroundColor: const Color.fromARGB(255, 31, 31, 31),
+  scaffoldBackgroundColor: const Color(0xFF0E1017),
   dividerColor: Colors.white24,
   primarySwatch: Colors.yellow,
 
   appBarTheme: const AppBarTheme(
-      backgroundColor: Color.fromARGB(255, 31, 31, 31),
+      backgroundColor: Color(0xff0e1017),
       titleTextStyle: TextStyle(
         color: Colors.white,
         fontSize: 20,
@@ -18,7 +18,12 @@ final darkTheme = ThemeData(
         color: Colors.white,
       )),
 
-  listTileTheme: const ListTileThemeData(iconColor: Colors.white),
+  // listTileTheme: const ListTileThemeData(iconColor: Colors.white),
+
+
+  drawerTheme: DrawerThemeData(
+    backgroundColor: const Color(0xFF0E1017),
+  ),
 
   textTheme: TextTheme(
     bodyMedium: const TextStyle(

@@ -1,4 +1,5 @@
 import 'package:flutter_ai/core/injection.dart';
+import 'package:flutter_ai/features/chat/bloc/chat_bloc.dart';
 import 'package:flutter_ai/features/chat/model/model.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
@@ -25,8 +26,18 @@ class MessageRepository {
   }
 
   Future<List<ChatGpt>> getMessagesFromChat(ChatName chat)  async {
-    List<ChatGpt> messages = await ChatGpt().select().chatNameId.equals(chat.id).toList();
-    return messages;
+    try {
+      List<ChatGpt> messages = await ChatGpt().select().chatNameId.equals(chat.id).toList();
+      return messages;
+    } catch (e, st) {
+      getIt<Talker>().handle(e, st);
+      getIt<Talker>().info('Произошла ошибка при попытки получить сообщения из чата, поэтому возвращаем пустой лист');
+      return [];
+    }
+  }
+
+  void deleteAll() {
+    ChatGpt().select().delete();
   }
 
 }

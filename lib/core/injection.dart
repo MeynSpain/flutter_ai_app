@@ -13,6 +13,7 @@ const gpt_3_turbo = 'gpt-3.5-turbo';
 const text_davinci = 'text-davinci-003';
 
 Future<void> init() async {
+
   // Talker init
   final talker = TalkerFlutter.init();
   getIt.registerSingleton(talker);
@@ -21,10 +22,12 @@ Future<void> init() async {
   ChatGptService chatGptService = ChatGptService();
   getIt.registerSingleton(chatGptService);
 
+  // chatGptService.deleteAllMessages();
+  // chatGptService.deleteAllChats();
+
   // Register ChatBloc
   getIt
       .registerLazySingleton<ChatBloc>(() => ChatBloc(chatGptService: getIt()));
-
 
 
   //Talker bloc logger
@@ -32,36 +35,8 @@ Future<void> init() async {
       talker: talker,
       settings: const TalkerBlocLoggerSettings(
         printEventFullData: false,
-        printStateFullData: false,
+        printStateFullData: true,
       ));
+
+  getIt<ChatBloc>().add(ChatLoadChatsEvent());
 }
-
-// OpenAI.baseUrl = 'https://api.openai.com/v1/chat/completions';
-// OpenAI.baseUrl = '/v1/chat/completions';
-// List<OpenAIModelModel> models = await OpenAI.instance.model.list();
-// OpenAIModelModel firstModel = models.first;
-
-// OpenAIChatCompletionModel chatCompletion = await OpenAI.instance.chat.create(
-//   model: text_davinci,
-//   maxTokens: 10,
-//   n: 1,
-//   temperature: 0,
-//   messages: [
-//     OpenAIChatCompletionChoiceMessageModel(
-//       content: "hello, what is Flutter and Dart ?",
-//       role: OpenAIChatMessageRole.user,
-//     ),
-//   ],
-// );
-//
-// log('Ответ на вопрос');
-// log(chatCompletion.choices.first.message.content);
-
-// for(var model in models) {
-//   log('${model.id}');
-// }
-// print(firstModel.id); // .
-// print('Прошел список модеделей');
-// OpenAIModelModel model = await OpenAI.instance.model.retrieve("text-davinci-003");
-// print(model.id);
-// print('Прошла модель давинчи');

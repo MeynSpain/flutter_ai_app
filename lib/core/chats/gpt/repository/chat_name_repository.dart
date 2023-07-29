@@ -37,4 +37,8 @@ class ChatNameRepository {
     }
   }
 
+  void deleteAll() {
+    ChatName().select().delete();
+  }
+
 }

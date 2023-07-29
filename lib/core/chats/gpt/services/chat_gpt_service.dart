@@ -12,7 +12,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatGptService {
-  final MessageRepository chatGptRepository = MessageRepository();
+  final MessageRepository messageRepository = MessageRepository();
   final ChatNameRepository chatNameRepository = ChatNameRepository();
 
   static const contextLength = 4;
@@ -63,11 +63,11 @@ class ChatGptService {
   }
 
   bool saveMessage(Message message, ChatName chat) {
-    return chatGptRepository.saveMessage(message, chat);
+    return messageRepository.saveMessage(message, chat);
   }
 
   Future<List<Message>> getMessagesFromChat(ChatName chat) async {
-    List<ChatGpt> dataList = await chatGptRepository.getMessagesFromChat(chat);
+    List<ChatGpt> dataList = await messageRepository.getMessagesFromChat(chat);
 
     List<Message> messages = List.generate(
         dataList.length,
@@ -82,16 +82,16 @@ class ChatGptService {
 
   /////// CHATS ////////
 
-  Future<ChatName?> createNewChat(String chatName) async {
-    try {
-      Uuid uuid = Uuid();
-      String uuidName = uuid.v1() + '.' + chatName;
-      ChatName? chat = await chatNameRepository.createNewChat(uuidName);
-      return chat;
-    } catch (e, st) {
-      getIt<Talker>().handle(e, st);
-      return null;
+  Future<ChatName> createNewChat(String chatName) async {
+    Uuid uuid = Uuid();
+    String uuidName = uuid.v1() + '.' + chatName;
+    ChatName? chat = await chatNameRepository.createNewChat(uuidName);
+
+    if (chat == null) {
+      throw Exception('Something went wrong maybe a chat with this name already exists');
     }
+
+    return chat;
   }
 
   Future<List<ChatName>> getChats() async {
@@ -103,4 +103,13 @@ class ChatGptService {
     ChatName? chat = await chatNameRepository.getChatById(id);
     return chat;
   }
+
+  void deleteAllChats() {
+    chatNameRepository.deleteAll();
+  }
+
+  void deleteAllMessages() {
+    messageRepository.deleteAll();
+  }
+
 }

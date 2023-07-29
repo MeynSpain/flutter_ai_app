@@ -3,21 +3,27 @@ part of 'chat_bloc.dart';
 @immutable
 abstract class ChatEvent {}
 
-class ChatSendMessageEvent extends ChatEvent{
+class ChatSendMessageEvent extends ChatEvent {
   final Message message;
-  final ChatName chat;
 
-  ChatSendMessageEvent({required this.message, required this.chat});
+  ChatSendMessageEvent({required this.message});
 }
 
-class ChatGetMessagesEvent extends ChatEvent{
+class ChatGetMessagesEvent extends ChatEvent {}
+
+class ChatSelectChatEvent extends ChatEvent {
   final ChatName? chat;
 
-  ChatGetMessagesEvent({this.chat});
+  ChatSelectChatEvent({this.chat});
+}
+
+class ChatCreateNewChatEvent extends ChatEvent {
+  final String chatName;
+
+  ChatCreateNewChatEvent({required this.chatName});
 }
 
 class ChatLoadChatsEvent extends ChatEvent {}
-
 
 class ChatGetChatByIdEvent extends ChatEvent {
   final int id;

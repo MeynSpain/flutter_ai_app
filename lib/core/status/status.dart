@@ -5,4 +5,8 @@ enum Status {
   error,
   chatsLoaded,
   chatsLoading,
+  sendingMessage,
+  responseReceived,
+  chatCreating,
+  chatCreated,
 }

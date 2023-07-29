@@ -23,27 +23,29 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<ChatGetMessagesEvent>(_get);
     on<ChatLoadChatsEvent>(_loadChats);
     on<ChatGetChatByIdEvent>(_getChatById);
+    on<ChatSelectChatEvent>(_selectChat);
+    on<ChatCreateNewChatEvent>(_createNewChat);
   }
 
   /// Send message to chatGPT and get answer
-  FutureOr<void> _send(
-      ChatSendMessageEvent event, Emitter<ChatState> emit) async {
-    emit(state.copyWith(status: Status.loading));
+  FutureOr<void> _send(ChatSendMessageEvent event,
+      Emitter<ChatState> emit) async {
+    emit(state.copyWith(status: Status.sendingMessage));
 
     try {
       // Сохранение сообщения пользователя в бд
-      chatGptService.saveMessage(event.message, event.chat);
+      chatGptService.saveMessage(event.message, state.selectedChat!);
 
       // Отправка сообщения (контекст + новое)
       Message message =
-          await chatGptService.getAnswer([...state.messages, event.message]);
+      await chatGptService.getAnswer([...state.messages, event.message]);
 
       emit(state.copyWith(
           messages: [...state.messages, event.message, message],
-          status: Status.success));
+          status: Status.responseReceived));
 
       // Сохранение сообщения GPT в бд
-      chatGptService.saveMessage(message, event.chat);
+      chatGptService.saveMessage(message, state.selectedChat!);
     } catch (e, st) {
       emit(state.copyWith(
         messages: [...state.messages, event.message],
@@ -54,29 +56,22 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  /// Get all messages from database
-  FutureOr<void> _get(
-      ChatGetMessagesEvent event, Emitter<ChatState> emit) async {
+  /// Get all messages by selected chat from database
+  FutureOr<void> _get(ChatGetMessagesEvent event,
+      Emitter<ChatState> emit) async {
     emit(state.copyWith(status: Status.loading));
 
     try {
-      ChatName? loadingChat = event.chat;
-      if (loadingChat == null) {
-        if (state.chats.isEmpty) {
-          add(ChatLoadChatsEvent());
-        }
-
-        if (state.chats.isNotEmpty ||
-            state.status == Status.chatsLoaded) {
-          loadingChat = state.chats.last;
-        }
+      if (state.selectedChat == null) {
+        getIt<Talker>().error('Selected chat is NULL!!!!');
+        emit(state.copyWith(
+          status: Status.error,
+        ));
+        return;
       }
 
-      // Если после всех проверок список чатов пуст, то создаем новый чат
-      loadingChat ??= await chatGptService.createNewChat('chat');
-
       List<Message> messages =
-          await chatGptService.getMessagesFromChat(loadingChat!);
+      await chatGptService.getMessagesFromChat(state.selectedChat!);
 
       emit(state.copyWith(messages: messages, status: Status.success));
     } catch (e, st) {
@@ -89,17 +84,29 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  FutureOr<void> _loadChats(
-      ChatLoadChatsEvent event, Emitter<ChatState> emit) async {
-    emit(state.copyWith(status: Status.loading));
+  /// Load chats from DB
+  /// If there are no chats, then creates one
+  FutureOr<void> _loadChats(ChatLoadChatsEvent event,
+      Emitter<ChatState> emit) async {
+    emit(state.copyWith(status: Status.chatsLoading));
 
     try {
       List<ChatName> chats = await chatGptService.getChats();
 
+      ChatName? selectedChat;
+      if (chats.isEmpty) {
+        selectedChat = await chatGptService.createNewChat('New chat');
+      } else {
+        selectedChat = chats.last;
+      }
+
       emit(state.copyWith(
         chats: chats,
+        selectedChat: selectedChat,
         status: Status.chatsLoaded,
       ));
+
+      add(ChatGetMessagesEvent());
 
       getIt<Talker>()
           .info('Chats were uploaded in the amount of ${chats.length} pieces');
@@ -112,8 +119,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  FutureOr<ChatName?> _getChatById(
-      ChatGetChatByIdEvent event, Emitter<ChatState> emit) async {
+  FutureOr<ChatName?> _getChatById(ChatGetChatByIdEvent event,
+      Emitter<ChatState> emit) async {
     emit(state.copyWith(status: Status.loading));
 
     try {
@@ -140,6 +147,42 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         status: Status.error,
       ));
 
+      getIt<Talker>().handle(e, st);
+    }
+  }
+
+  FutureOr<void> _selectChat(ChatSelectChatEvent event,
+      Emitter<ChatState> emit) {
+    try {
+      emit(state.copyWith(
+        selectedChat: event.chat,
+      ));
+
+      add(ChatGetMessagesEvent());
+    } catch (e, st) {
+      emit(state.copyWith(status: Status.error));
+
+      getIt<Talker>().handle(e, st);
+    }
+  }
+
+  FutureOr<void> _createNewChat(ChatCreateNewChatEvent event,
+      Emitter<ChatState> emit) async {
+    emit(state.copyWith(
+      status: Status.chatCreating,
+    ));
+
+    try {
+      ChatName chat = await chatGptService.createNewChat(event.chatName);
+
+      emit(state.copyWith(
+          chats:[...state.chats, chat],
+          status: Status.chatCreated,
+      ));
+
+      add(ChatSelectChatEvent(chat: chat));
+    } catch (e, st) {
+      emit(state.copyWith(status: Status.error));
       getIt<Talker>().handle(e, st);
     }
   }

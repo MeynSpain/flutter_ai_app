@@ -43,23 +43,10 @@ class _ChatScreenState extends State<ChatScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Chat GPT',
-        ),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              int size = await service.getDatabaseSize();
-              getIt<Talker>().info('Size of db:$size');
-            },
-            icon: Icon(Icons.ac_unit_outlined),
-          )
-        ],
         leading: Builder(
           builder: (context) {
             return IconButton(
-              icon: SvgPicture.asset('assets/icons/menu.svg'),
+              icon: SvgPicture.asset('assets/icons/list_chats_icon.svg'),
               onPressed: () => Scaffold.of(context).openDrawer(),
             );
           },

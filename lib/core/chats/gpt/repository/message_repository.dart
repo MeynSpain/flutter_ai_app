@@ -40,4 +40,21 @@ class MessageRepository {
     ChatGpt().select().delete();
   }
 
+
+  /// Удаляет сообщения старше кол-ва дней [countDays]
+  Future<bool> deleteMessagesOlderThan(int countDays) async {
+    try {
+      DateTime timeNow = DateTime.now();
+      DateTime timeDifference = timeNow.subtract(Duration(days: countDays));
+      var deleteResult = await ChatGpt().select().date.lessThan(timeDifference).delete();
+      getIt<Talker>().info(deleteResult.toString());
+      return deleteResult.success;
+    } catch (e, st) {
+      getIt<Talker>().handle(e, st);
+      return false;
+    }
+  }
+
+
+
 }

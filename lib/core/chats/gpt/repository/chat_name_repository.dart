@@ -41,4 +41,15 @@ class ChatNameRepository {
     ChatName().select().delete();
   }
 
+  Future<bool> deleteChat(ChatName chatName) async {
+    try {
+      var isDeleted = await chatName.delete();
+      getIt<Talker>().info(isDeleted.toString());
+      return isDeleted.success;
+    } catch (e, st) {
+      getIt<Talker>().handle(e, st);
+      return false;
+    }
+  }
+
 }

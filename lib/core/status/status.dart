@@ -9,4 +9,6 @@ enum Status {
   responseReceived,
   chatCreating,
   chatCreated,
+  chatDeleting,
+  chatDeleted,
 }

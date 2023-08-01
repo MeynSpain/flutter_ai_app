@@ -25,11 +25,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<ChatGetChatByIdEvent>(_getChatById);
     on<ChatSelectChatEvent>(_selectChat);
     on<ChatCreateNewChatEvent>(_createNewChat);
+    on<ChatDeleteExpiredMessagesEvent>(_deleteExpiredMessages);
+    on<ChatDeleteChatEvent>(_deleteChat);
   }
 
   /// Send message to chatGPT and get answer
-  FutureOr<void> _send(ChatSendMessageEvent event,
-      Emitter<ChatState> emit) async {
+  FutureOr<void> _send(
+      ChatSendMessageEvent event, Emitter<ChatState> emit) async {
     emit(state.copyWith(status: Status.sendingMessage));
 
     try {
@@ -38,7 +40,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
       // Отправка сообщения (контекст + новое)
       Message message =
-      await chatGptService.getAnswer([...state.messages, event.message]);
+          await chatGptService.getAnswer([...state.messages, event.message]);
 
       emit(state.copyWith(
           messages: [...state.messages, event.message, message],
@@ -57,8 +59,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   /// Get all messages by selected chat from database
-  FutureOr<void> _get(ChatGetMessagesEvent event,
-      Emitter<ChatState> emit) async {
+  FutureOr<void> _get(
+      ChatGetMessagesEvent event, Emitter<ChatState> emit) async {
     emit(state.copyWith(status: Status.loading));
 
     try {
@@ -71,7 +73,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       }
 
       List<Message> messages =
-      await chatGptService.getMessagesFromChat(state.selectedChat!);
+          await chatGptService.getMessagesFromChat(state.selectedChat!);
 
       emit(state.copyWith(messages: messages, status: Status.success));
     } catch (e, st) {
@@ -86,12 +88,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   /// Load chats from DB
   /// If there are no chats, then creates one
-  FutureOr<void> _loadChats(ChatLoadChatsEvent event,
-      Emitter<ChatState> emit) async {
+  FutureOr<void> _loadChats(
+      ChatLoadChatsEvent event, Emitter<ChatState> emit) async {
     emit(state.copyWith(status: Status.chatsLoading));
 
     try {
       List<ChatName> chats = await chatGptService.getChats();
+
+      // Удаление сообщений с истекшим сроком годности
+      // Пока во время загрузки чатов, мб потом в другое место уберу
+      add(ChatDeleteExpiredMessagesEvent());
 
       ChatName? selectedChat;
       if (chats.isEmpty) {
@@ -119,8 +125,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  FutureOr<ChatName?> _getChatById(ChatGetChatByIdEvent event,
-      Emitter<ChatState> emit) async {
+  FutureOr<ChatName?> _getChatById(
+      ChatGetChatByIdEvent event, Emitter<ChatState> emit) async {
     emit(state.copyWith(status: Status.loading));
 
     try {
@@ -151,8 +157,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  FutureOr<void> _selectChat(ChatSelectChatEvent event,
-      Emitter<ChatState> emit) {
+  FutureOr<void> _selectChat(
+      ChatSelectChatEvent event, Emitter<ChatState> emit) {
     try {
       emit(state.copyWith(
         selectedChat: event.chat,
@@ -166,8 +172,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  FutureOr<void> _createNewChat(ChatCreateNewChatEvent event,
-      Emitter<ChatState> emit) async {
+  FutureOr<void> _createNewChat(
+      ChatCreateNewChatEvent event, Emitter<ChatState> emit) async {
     emit(state.copyWith(
       status: Status.chatCreating,
     ));
@@ -176,11 +182,38 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       ChatName chat = await chatGptService.createNewChat(event.chatName);
 
       emit(state.copyWith(
-          chats:[...state.chats, chat],
-          status: Status.chatCreated,
+        chats: [...state.chats, chat],
+        status: Status.chatCreated,
       ));
 
       add(ChatSelectChatEvent(chat: chat));
+    } catch (e, st) {
+      emit(state.copyWith(status: Status.error));
+      getIt<Talker>().handle(e, st);
+    }
+  }
+
+  FutureOr<void> _deleteExpiredMessages(
+      ChatDeleteExpiredMessagesEvent event, Emitter<ChatState> emit) async {
+
+    await chatGptService.deleteExpiredMessages();
+
+  }
+
+  FutureOr<void> _deleteChat(ChatDeleteChatEvent event, Emitter<ChatState> emit) async {
+    emit(state.copyWith(status: Status.chatDeleting));
+
+    try {
+      await chatGptService.deleteChat(event.chat);
+
+      if (event.chat == state.selectedChat) {
+        state.messages.clear();
+      }
+
+      state.chats.remove(event.chat);
+
+      emit(state.copyWith(status: Status.chatDeleted));
+
     } catch (e, st) {
       emit(state.copyWith(status: Status.error));
       getIt<Talker>().handle(e, st);

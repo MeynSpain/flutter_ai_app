@@ -1,13 +1,16 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter_ai/core/chats/gpt/repository/chat_name_repository.dart';
 import 'package:flutter_ai/core/chats/gpt/repository/message_repository.dart';
 import 'package:flutter_ai/core/injection.dart';
+import 'package:flutter_ai/core/status/prefs_names.dart';
 import 'package:flutter_ai/features/chat/model/message.dart';
 import 'package:flutter_ai/features/chat/model/model.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -88,7 +91,8 @@ class ChatGptService {
     ChatName? chat = await chatNameRepository.createNewChat(uuidName);
 
     if (chat == null) {
-      throw Exception('Something went wrong maybe a chat with this name already exists');
+      throw Exception(
+          'Something went wrong maybe a chat with this name already exists');
     }
 
     return chat;
@@ -112,4 +116,46 @@ class ChatGptService {
     messageRepository.deleteAll();
   }
 
+  Future<String?> getDatabasePath() async {
+    final String? dbPath = await ChatGptDatabase().getDatabasePath();
+    return '$dbPath/${ChatGptDatabase().databaseName}';
+  }
+
+  /// Get Size in bytes of database.
+  /// If size == -1, then database not found
+  Future<int> getDatabaseSize() async {
+    final dbPath = await getDatabasePath();
+    int dbSize = -1;
+
+    if (dbPath != null) {
+      File dbFile = File(dbPath);
+      if (await dbFile.exists()) {
+        FileStat dbStat = await dbFile.stat();
+        dbSize = dbStat.size;
+      }
+    }
+
+    return dbSize;
+  }
+
+  /// Удаляет сообщения с истекшим сроком годности.
+  /// Срок годности берется из [SharedPreferences],
+  /// зарегистрированного как Singleton с помощью [getIt]
+  Future<bool> deleteExpiredMessages() async {
+    bool isDeleted = false;
+
+    int? expiration =
+        getIt<SharedPreferences>().getInt(PrefsNames.expirationDate);
+
+    if (expiration != null) {
+      isDeleted = await messageRepository.deleteMessagesOlderThan(expiration);
+    }
+
+    return isDeleted;
+  }
+
+  Future<bool> deleteChat(ChatName chat) async {
+    bool isDeleted = await chatNameRepository.deleteChat(chat);
+    return isDeleted;
+  }
 }

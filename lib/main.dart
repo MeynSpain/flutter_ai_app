@@ -4,6 +4,7 @@ import 'package:flutter_ai/core/injection.dart';
 
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await init();
   runApp(const ChatApp());
 }

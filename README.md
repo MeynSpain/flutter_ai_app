@@ -28,3 +28,25 @@
 3. text
 4. role
 5. date
+
+
+Container(
+decoration: ShapeDecoration(
+color: themeChat!.color,
+shape: themeChat.rectangleBorder,
+shadows: [
+themeChat.boxShadow
+],
+),
+child: Center(
+child: Text(
+chatName,
+style: const TextStyle(
+color: Color(0xFF112A46),
+fontSize: 30,
+fontFamily: 'Noah',
+fontWeight: FontWeight.w500,
+),
+),
+),
+),

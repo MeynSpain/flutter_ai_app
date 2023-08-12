@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai/core/constant/constant.dart';
 import 'package:flutter_ai/core/injection.dart';
-import 'package:flutter_ai/core/status/status.dart';
 import 'package:flutter_ai/core/theme/extensions/bot_message_container.dart';
 import 'package:flutter_ai/core/theme/extensions/user_message_container.dart';
 import 'package:flutter_ai/features/chat/bloc/chat_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dart_openai/dart_openai.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
-class ChatWidget extends StatelessWidget {
-  const ChatWidget({Key? key}) : super(key: key);
+class ChatWidget extends StatefulWidget {
+  ChatWidget({Key? key}) : super(key: key);
+
+  @override
+  State<ChatWidget> createState() => _ChatWidgetState();
+}
+
+class _ChatWidgetState extends State<ChatWidget> {
+  final ScrollController _scrollController = ScrollController();
+
+  void scrollToBottom() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +33,22 @@ class ChatWidget extends StatelessWidget {
     return BlocBuilder<ChatBloc, ChatState>(
       bloc: getIt<ChatBloc>(),
       builder: (context, state) {
+        if (state.status == Status.success ||
+            state.status == Status.responseReceived ||
+            state.status == Status.sendingMessage) {
+          WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+            scrollToBottom();
+          });
+        }
+
         return state.status != Status.error
             ? Expanded(
                 child: ListView.builder(
                   itemCount: state.messages.length,
+                  controller: _scrollController,
                   itemBuilder: (context, int index) {
                     final bool isUser = state.messages[index].role ==
                         OpenAIChatMessageRole.user;
-
                     return Align(
                       alignment:
                           isUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -44,11 +68,12 @@ class ChatWidget extends StatelessWidget {
                                 : [
                                     botTheme!.boxShadow,
                                   ]),
-                        child: Text(
-                          state.messages[index].content,
-                          style: isUser
-                              ? userTheme!.textStyle
-                              : botTheme!.textStyle,
+                        child: MarkdownBody(
+                          data: state.messages[index].content,
+                          selectable: true,
+                          // style: isUser
+                          //     ? userTheme!.textStyle
+                          //     : botTheme!.textStyle,
                         ),
                       ),
                     );

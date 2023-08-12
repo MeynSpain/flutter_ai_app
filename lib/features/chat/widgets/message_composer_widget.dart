@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai/core/injection.dart';
-import 'package:flutter_ai/core/status/status.dart';
 import 'package:flutter_ai/core/theme/extensions/message_composer.dart';
 import 'package:flutter_ai/features/chat/bloc/chat_bloc.dart';
 import 'package:flutter_ai/features/chat/model/model.dart';
@@ -14,22 +12,28 @@ class MessageComposerWidget extends StatefulWidget {
   State<MessageComposerWidget> createState() => _MessageComposerWidgetState();
 }
 
-class _MessageComposerWidgetState extends State<MessageComposerWidget> {
+class _MessageComposerWidgetState extends State<MessageComposerWidget> with SingleTickerProviderStateMixin {
   final TextEditingController _textController = TextEditingController();
+  late AnimationController _animationController;
 
-  final ScrollController _scrollController = ScrollController();
   bool _isTextNotEmpty = false;
 
   @override
   void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 5000),
+    );
     super.initState();
     _textController.addListener(_onTextChanged);
+
   }
 
   @override
   void dispose() {
     _textController.removeListener(_onTextChanged);
     _textController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -84,14 +88,17 @@ class _MessageComposerWidgetState extends State<MessageComposerWidget> {
                         ],
                       ),
                       margin: EdgeInsets.only(right: 12),
-                      child: IconButton(
-                        onPressed: () => _sendMessage(context, state),
-                        icon: Transform.scale(
-                          scale: 1.6,
-                          child: SvgPicture.asset(
-                            'assets/icons/send_icon.svg',
-                            height: 44,
-                            width: 44,
+                      child: RotationTransition(
+                        turns: Tween(begin: 0.0, end: 1.0).animate(_animationController),
+                        child: IconButton(
+                          onPressed: () => _sendMessage(context, state),
+                          icon: Transform.scale(
+                            scale: 1.6,
+                            child: SvgPicture.asset(
+                              'assets/icons/send_icon.svg',
+                              height: 44,
+                              width: 44,
+                            ),
                           ),
                         ),
                       ),
@@ -105,6 +112,7 @@ class _MessageComposerWidgetState extends State<MessageComposerWidget> {
   }
 
   void _sendMessage(BuildContext context, ChatState state) {
+    _animationController.forward();
     String text = _textController.text.trim();
     if (text.isNotEmpty) {
       context.read<ChatBloc>().add(
@@ -113,18 +121,5 @@ class _MessageComposerWidgetState extends State<MessageComposerWidget> {
           );
     }
     _textController.text = '';
-    // _scrollController.animateTo(
-    //   _scrollController.position.maxScrollExtent,
-    //   duration: const Duration(milliseconds: 300),
-    //   curve: Curves.easeOut,
-    // );
-  }
-
-  void _scrollDown() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-    );
   }
 }

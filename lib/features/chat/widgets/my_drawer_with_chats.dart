@@ -1,9 +1,13 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_ai/core/constant/constant.dart';
 import 'package:flutter_ai/core/injection.dart';
-import 'package:flutter_ai/core/status/status.dart';
+import 'package:flutter_ai/core/theme/extensions/message_composer.dart';
+import 'package:flutter_ai/core/theme/extensions/user_message_container.dart';
 import 'package:flutter_ai/features/chat/bloc/chat_bloc.dart';
+import 'package:flutter_ai/features/chat/widgets/dialog_new_chat.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
 class MyDrawerWithChats extends StatelessWidget {
   MyDrawerWithChats({Key? key}) : super(key: key);
@@ -14,11 +18,12 @@ class MyDrawerWithChats extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Drawer(
+      backgroundColor: theme.primaryColor,
       child: BlocBuilder<ChatBloc, ChatState>(
         bloc: getIt<ChatBloc>(),
         builder: (context, state) {
           if (state.status == Status.chatsLoading) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (state.status == Status.chatsLoading) {
@@ -43,25 +48,61 @@ class MyDrawerWithChats extends StatelessWidget {
                     ),
                   ),
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog(context: context, builder: (context) {
+                      return DialogNewChat();
+                    });
+                  },
+                  child: Text('Test'),
+                ),
                 // Divider(),
                 Expanded(
                   child: ListView.separated(
                     separatorBuilder: (context, index) {
-                      return const Divider();
+                      return const SizedBox(
+                        height: 2,
+                      );
                     },
+                    // reverse: true,
                     itemCount: state.chats.length,
                     itemBuilder: (context, index) {
                       int indexOf = state.chats[index].name!.indexOf('.');
-                      String chatName =
-                          state.chats[index].name!.substring(indexOf + 1);
+
+                      String chatName = // Чтобы самый новый чат был сверху
+                          state.chats[state.chats.length - (index + 1)].name!
+                              .substring(indexOf + 1);
+
                       return ListTile(
-                        title: Center(
-                          child: Text(
-                            chatName,
-                            style: theme.textTheme.headlineMedium,
+                        title: Container(
+                          decoration: ShapeDecoration(
+                            color: const Color(0xFF6FDABE),
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                width: 0.50,
+                                strokeAlign: BorderSide.strokeAlignCenter,
+                                color: Color(0xFF112A46),
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            shadows: const [
+                              BoxShadow(
+                                color: Color(0xFF000000),
+                                blurRadius: 0,
+                                offset: Offset(4, 4),
+                                spreadRadius: 0,
+                              )
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              chatName,
+                              style: theme.textTheme.headlineMedium,
+                            ),
                           ),
                         ),
-                        onTap: () => _selectChat(state, index),
+                        onTap: () => _selectChat(
+                            state, state.chats.length - (index + 1)),
                       );
                     },
                   ),
@@ -82,17 +123,34 @@ class MyDrawerWithChats extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) {
+        final theme = Theme.of(context);
+        final themeMessageComposer =
+            Theme.of(context).extension<MessageComposer>();
         return AlertDialog(
+          backgroundColor: theme.primaryColor,
           title: const Text('Creating new chat'),
           content: Container(
+            // height: 100,
             height: 100,
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: theme
+                  .extension<UserMessageContainer>()!
+                  .rectangleBorder
+                  .borderRadius,
+            ),
             child: Column(
               children: [
                 const Text('Write name of chat'),
-                TextField(
-                  controller: _textController,
-                  decoration: const InputDecoration(
-                    hintText: 'New chat',
+                Container(
+                  height: 50,
+                  decoration: themeMessageComposer!.shapeDecoration,
+                  child: TextField(
+                    controller: _textController,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'New chat',
+                    ),
                   ),
                 )
               ],

@@ -38,6 +38,13 @@ class Message {
     _role = OpenAIChatMessageRole.user;
   }
 
+  Message.fromAI({required content}) {
+    _content = content;
+    _author = OpenAIChatMessageRole.assistant.toString();
+    _date = DateTime.now();
+    _role = OpenAIChatMessageRole.assistant;
+  }
+
   DateTime get date => _date;
 
   set date(DateTime value) {

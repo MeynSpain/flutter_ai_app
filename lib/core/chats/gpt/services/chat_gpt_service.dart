@@ -1,11 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter_ai/core/chats/gpt/repository/chat_name_repository.dart';
 import 'package:flutter_ai/core/chats/gpt/repository/message_repository.dart';
+import 'package:flutter_ai/core/constant/constant.dart';
 import 'package:flutter_ai/core/injection.dart';
-import 'package:flutter_ai/core/status/prefs_names.dart';
 import 'package:flutter_ai/features/chat/model/message.dart';
 import 'package:flutter_ai/features/chat/model/model.dart';
 
@@ -39,7 +38,7 @@ class ChatGptService {
         await OpenAI.instance.chat.create(
             model: "gpt-3.5-turbo",
             temperature: 0,
-            maxTokens: 100,
+            maxTokens: 1000,
             messages: List.generate(
                 listContext.length,
                 (index) => OpenAIChatCompletionChoiceMessageModel(
@@ -60,7 +59,7 @@ class ChatGptService {
   Future<void> init() async {
     // Инициализация api ключа
     await dotenv.load(fileName: '.env');
-    final apiKey = dotenv.env['apiKey'];
+    final apiKey = dotenv.env['apiKeyNew'];
     OpenAI.apiKey = apiKey!;
     log('apiKey = $apiKey');
   }
@@ -146,6 +145,8 @@ class ChatGptService {
 
     int? expiration =
         getIt<SharedPreferences>().getInt(PrefsNames.expirationDate);
+
+    getIt<Talker>().info('EXPITATION DAYS = ${expiration}');
 
     if (expiration != null) {
       isDeleted = await messageRepository.deleteMessagesOlderThan(expiration);

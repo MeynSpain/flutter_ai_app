@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_ai/core/constant/constant.dart';
 import 'package:flutter_ai/core/injection.dart';
-import 'package:flutter_ai/core/status/status.dart';
 import 'package:flutter_ai/features/chat/model/message.dart';
 import 'package:meta/meta.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -17,6 +17,9 @@ part 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatGptService chatGptService;
+  
+  final Message messageSending = Message.fromAI(content: 'Пишет...');
+  final Message messageError = Message.fromAI(content: 'Произошла ошибка');
 
   ChatBloc({required this.chatGptService}) : super(ChatState.initial()) {
     on<ChatSendMessageEvent>(_send);
@@ -32,7 +35,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   /// Send message to chatGPT and get answer
   FutureOr<void> _send(
       ChatSendMessageEvent event, Emitter<ChatState> emit) async {
-    emit(state.copyWith(status: Status.sendingMessage));
+    emit(state.copyWith(
+      status: Status.sendingMessage,
+      messages: [...state.messages, event.message, messageSending],
+    ));
 
     try {
       // Сохранение сообщения пользователя в бд
@@ -42,13 +48,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       Message message =
           await chatGptService.getAnswer([...state.messages, event.message]);
 
+      state.messages.removeLast();
+
       emit(state.copyWith(
-          messages: [...state.messages, event.message, message],
+          messages: [...state.messages, message],
           status: Status.responseReceived));
 
       // Сохранение сообщения GPT в бд
       chatGptService.saveMessage(message, state.selectedChat!);
     } catch (e, st) {
+      state.messages.removeLast();
       emit(state.copyWith(
         messages: [...state.messages, event.message],
         status: Status.error,
@@ -125,6 +134,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
+  /// Не используется
   FutureOr<ChatName?> _getChatById(
       ChatGetChatByIdEvent event, Emitter<ChatState> emit) async {
     emit(state.copyWith(status: Status.loading));
@@ -195,12 +205,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   FutureOr<void> _deleteExpiredMessages(
       ChatDeleteExpiredMessagesEvent event, Emitter<ChatState> emit) async {
-
     await chatGptService.deleteExpiredMessages();
-
   }
 
-  FutureOr<void> _deleteChat(ChatDeleteChatEvent event, Emitter<ChatState> emit) async {
+  FutureOr<void> _deleteChat(
+      ChatDeleteChatEvent event, Emitter<ChatState> emit) async {
     emit(state.copyWith(status: Status.chatDeleting));
 
     try {
@@ -213,7 +222,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       state.chats.remove(event.chat);
 
       emit(state.copyWith(status: Status.chatDeleted));
-
     } catch (e, st) {
       emit(state.copyWith(status: Status.error));
       getIt<Talker>().handle(e, st);

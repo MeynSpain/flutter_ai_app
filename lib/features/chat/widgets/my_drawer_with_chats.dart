@@ -48,14 +48,14 @@ class MyDrawerWithChats extends StatelessWidget {
                     ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    showDialog(context: context, builder: (context) {
-                      return DialogNewChat();
-                    });
-                  },
-                  child: Text('Test'),
-                ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     showDialog(context: context, builder: (context) {
+                //       return DialogNewChat();
+                //     });
+                //   },
+                //   child: Text('Test'),
+                // ),
                 // Divider(),
                 Expanded(
                   child: ListView.separated(

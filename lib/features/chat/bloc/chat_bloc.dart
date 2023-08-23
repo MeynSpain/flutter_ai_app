@@ -111,6 +111,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       ChatName? selectedChat;
       if (chats.isEmpty) {
         selectedChat = await chatGptService.createNewChat('New chat');
+        chats.add(selectedChat);
       } else {
         selectedChat = chats.last;
       }

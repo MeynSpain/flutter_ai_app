@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai/core/constant/constant.dart';
 import 'package:flutter_ai/core/theme/extensions/message_composer.dart';
 import 'package:flutter_ai/core/theme/extensions/message_input_container.dart';
 import 'package:flutter_ai/features/chat/bloc/chat_bloc.dart';
@@ -52,26 +53,27 @@ class _MessageComposerWidgetState extends State<MessageComposerWidget>
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
         return Container(
-          padding: const EdgeInsets.only(
-            left: 16,
-            top: 10,
-            right: 16,
-            bottom: 16
-          ),
-          decoration: BoxDecoration(
+          padding:
+              const EdgeInsets.only(left: 16, top: 10, right: 16, bottom: 16),
+          decoration: const BoxDecoration(
             color: Colors.white,
             border: Border(
-              top: BorderSide(color: Color(0xFFF2F3F5))
+              top: BorderSide(
+                color: Color(0xFFF2F3F5),
+                width: 2,
+              ),
             ),
           ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(16),
-                  decoration: themeMessageComposer!.boxDecoration,
-                  // height: 70,
+          child: Container(
+            margin: const EdgeInsets.all(16),
+            decoration: themeMessageComposer!.boxDecoration,
+            // height: 70,
+            child: Row(
+              children: [
+                Expanded(
                   child: TextField(
+                    enabled:
+                        state.status == Status.sendingMessage ? false : true,
                     controller: _textController,
                     onSubmitted: (_) => _sendMessage(context, state),
                     textAlign: themeMessageComposer.textAlign,
@@ -79,46 +81,23 @@ class _MessageComposerWidgetState extends State<MessageComposerWidget>
                     decoration: themeMessageComposer.inputDecoration,
                   ),
                 ),
-              ),
-              _isTextNotEmpty
-                  ? Container(
-                      decoration: ShapeDecoration(
-                        shape: RoundedRectangleBorder(
-                          side: const BorderSide(
-                            width: 0.50,
-                            strokeAlign: BorderSide.strokeAlignCenter,
-                            color: Colors.red,
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        shadows: const [
-                          BoxShadow(
-                            color: Color(0xFF000000),
-                            blurRadius: 0,
-                            offset: Offset(2, 2),
-                            spreadRadius: 0,
-                          )
-                        ],
-                      ),
-                      margin: EdgeInsets.only(right: 12),
-                      child: RotationTransition(
-                        turns: Tween(begin: 0.0, end: 1.0)
-                            .animate(_animationController),
-                        child: IconButton(
-                          onPressed: () => _sendMessage(context, state),
-                          icon: Transform.scale(
-                            scale: 1.6,
-                            child: SvgPicture.asset(
-                              'assets/icons/send_icon.svg',
-                              height: 44,
-                              width: 44,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
-            ],
+                Visibility(
+                  visible: _isTextNotEmpty,
+                  child: Container(
+                    width: 1.5,
+                    height: 30,
+                    color: Colors.black,
+                  ),
+                ),
+                Visibility(
+                  visible: _isTextNotEmpty,
+                  child: IconButton(
+                    onPressed: () => _sendMessage(context, state),
+                    icon: SvgPicture.asset('assets/icons/send.svg'),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

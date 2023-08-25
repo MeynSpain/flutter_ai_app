@@ -2,7 +2,7 @@
     package="meynspain.botai">
 
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
-    <uses-permission android:name="com.android.vending.BILLING" />
+<!--    <uses-permission android:name="com.android.vending.BILLING" />-->
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"

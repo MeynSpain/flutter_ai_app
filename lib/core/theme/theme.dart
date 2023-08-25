@@ -29,6 +29,7 @@ final mainTheme = ThemeData(
       139,
     ),
     extensions: <ThemeExtension<dynamic>>[
+
       MessageInputContainer(
         boxDecoration: BoxDecoration(
           color: const Color(0xFFF2F3F5),
@@ -59,7 +60,7 @@ final mainTheme = ThemeData(
         ),
       ),
 
-
+//////////////////////////////////////////////////////////
 
       MessageComposer(
         shapeDecoration: ShapeDecoration(
@@ -109,59 +110,31 @@ final mainTheme = ThemeData(
 ///////////////////////////////////////////////
 
       UserMessageContainer(
-        color: const Color(0xFFFCD581),
+        color: const Color(0xFFB3F2FF),
         margin: const EdgeInsets.only(top: 10, bottom: 10, left: 80, right: 10),
-        rectangleBorder: const RoundedRectangleBorder(
-          side: BorderSide(
-            width: 0.50,
-            strokeAlign: BorderSide.strokeAlignCenter,
-          ),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(2),
-          ),
-        ),
-        boxShadow: const BoxShadow(
-          color: Color(0xFF000000),
-          blurRadius: 0,
-          offset: Offset(4, 4),
-          spreadRadius: 0,
+        rectangleBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
         textStyle: const TextStyle(
           color: Color(0xFF112A46),
           fontSize: 14,
-          fontFamily: 'Noah',
+          fontFamily: 'Montserrat',
           fontWeight: FontWeight.w500,
         ),
       ),
+
+      //////////////////////////////////////
+
       BotMessageContainer(
-        color: const Color(0xFFFFA1C1),
+        color: const Color(0xFF4DDFFF),
         margin: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 80),
-        rectangleBorder: const RoundedRectangleBorder(
-          side: BorderSide(
-            width: 0.50,
-            strokeAlign: BorderSide.strokeAlignCenter,
-            color: Color(0xFF112A46),
-          ),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-            bottomLeft: Radius.circular(2),
-            bottomRight: Radius.circular(30),
-          ),
-        ),
-        boxShadow: const BoxShadow(
-          color: Color(0xFF000000),
-          blurRadius: 0,
-          offset: Offset(4, 4),
-          spreadRadius: 0,
+        rectangleBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
         textStyle: const TextStyle(
-          color: Color(0xFF112A46),
+          color: Colors.black,
           fontSize: 14,
-          fontFamily: 'Noah',
+          fontFamily: 'Montserrat',
           fontWeight: FontWeight.w500,
         ),
       )

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
 class BotMessageContainer extends ThemeExtension<BotMessageContainer> {
-  final Color color;
-  final RoundedRectangleBorder rectangleBorder;
-  final BoxShadow boxShadow;
-  final TextStyle textStyle;
-  final EdgeInsets margin;
+  final Color? color;
+  final RoundedRectangleBorder? rectangleBorder;
+  final BoxShadow? boxShadow;
+  final TextStyle? textStyle;
+  final EdgeInsets? margin;
 
   BotMessageContainer({
-    required this.color,
-    required this.rectangleBorder,
-    required this.boxShadow,
-    required this.textStyle,
-    required this.margin,
+     this.color,
+     this.rectangleBorder,
+     this.boxShadow,
+     this.textStyle,
+     this.margin,
   });
 
   @override

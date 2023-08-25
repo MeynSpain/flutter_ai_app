@@ -134,10 +134,10 @@ class MyDrawerWithChats extends StatelessWidget {
             height: 100,
             decoration: BoxDecoration(
               color: Colors.red,
-              borderRadius: theme
+              borderRadius:  theme
                   .extension<UserMessageContainer>()!
                   .rectangleBorder
-                  .borderRadius,
+                  ?.borderRadius,
             ),
             child: Column(
               children: [

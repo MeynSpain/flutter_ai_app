@@ -7,6 +7,7 @@ import 'package:flutter_ai/features/chat/bloc/chat_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ChatWidget extends StatefulWidget {
   ChatWidget({Key? key}) : super(key: key);
@@ -49,34 +50,71 @@ class _ChatWidgetState extends State<ChatWidget> {
                   itemBuilder: (context, int index) {
                     final bool isUser = state.messages[index].role ==
                         OpenAIChatMessageRole.user;
-                    return Align(
-                      alignment:
-                          isUser ? Alignment.centerRight : Alignment.centerLeft,
-                      child: Container(
-                        margin: isUser ? userTheme!.margin : botTheme!.margin,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 25, vertical: 15),
-                        decoration: ShapeDecoration(
-                            color: isUser ? userTheme!.color : botTheme!.color,
-                            shape: isUser
-                                ? userTheme!.rectangleBorder
-                                : botTheme!.rectangleBorder,
-                            shadows: isUser
-                                ? [
-                                    userTheme!.boxShadow,
-                                  ]
-                                : [
-                                    botTheme!.boxShadow,
-                                  ]),
-                        child: MarkdownBody(
-                          data: state.messages[index].content,
-                          selectable: true,
-                          // style: isUser
-                          //     ? userTheme!.textStyle
-                          //     : botTheme!.textStyle,
-                        ),
+                    return Container(
+                      // margin: EdgeInsets.all(10),
+                      // decoration: BoxDecoration(
+                      //   color: Colors.red
+                      // ),
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.only(
+                              top: 12,
+                              bottom: 12,
+                              left: 16,
+                              right: 24,
+                            ),
+                            margin: const EdgeInsets.only(
+                              left: 16,
+                              right: 16,
+                              top: 10,
+                              bottom: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isUser ? userTheme?.color : botTheme?.color,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child:
+                                MarkdownBody(data: state.messages[index].content),
+                          ),
+                          Positioned(
+                            child: isUser
+                                ? SvgPicture.asset('assets/icons/user_avatar.svg')
+                                : SvgPicture.asset('assets/icons/bot_avatar.svg'),
+                            bottom: 8,
+                            right: 8,
+                          ),
+                        ],
                       ),
                     );
+                    //   return Container(
+                    //     margin: isUser ? userTheme!.margin : botTheme!.margin,
+                    //     // padding: const EdgeInsets.symmetric(
+                    //     //     horizontal: 25, vertical: 15),
+                    //     decoration: BoxDecoration(
+                    //       color: isUser ? userTheme!.color : botTheme!.color,
+                    //       borderRadius: isUser
+                    //           ? userTheme?.rectangleBorder?.borderRadius
+                    //           : botTheme?.rectangleBorder?.borderRadius,
+                    //     ),
+                    //     child: Stack(
+                    //       children: [
+                    //         MarkdownBody(
+                    //           data: state.messages[index].content,
+                    //           selectable: true,
+                    //           // style: isUser
+                    //           //     ? userTheme!.textStyle
+                    //           //     : botTheme!.textStyle,
+                    //         ),
+                    //         Align(
+                    //           child: SvgPicture.asset(
+                    //               'assets/icons/user_avatar.svg'),
+                    //           alignment: Alignment.bottomRight,
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   );
                   },
                 ),
               )

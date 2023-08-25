@@ -1,0 +1,29 @@
+<svg width="30" height="29" viewBox="0 0 30 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="pic" clip-path="url(#clip0_215_739)">
+<g id="Pic">
+<rect id="Bg_2" x="1" width="32.2734" height="32.2734" rx="16.1367" fill="white"/>
+</g>
+<g id="Group 10328">
+<circle id="Ellipse 26" cx="17.5" cy="16.5" r="12.5" fill="white"/>
+<g id="Mask group">
+<mask id="mask0_215_739" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="6" y="5" width="23" height="23">
+<circle id="Ellipse 26_2" cx="17.5001" cy="16.5001" r="11.0716" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_215_739)">
+<g id="Group 10327">
+<path id="Vector 1" d="M7.69409 12.2364L10.1503 7.95923H15.0627L16.4602 10.119H21.1609H26.158L28.5719 14.3962H23.6171L21.1609 10.119L19.9522 12.2364H12.5642L10.1503 16.4713H12.6065L13.8346 18.631H18.747L21.2879 22.9082H16.1638L13.7923 27.1431L11.3361 22.9082L12.5218 20.7908L10.1503 16.4713L7.69409 12.2364Z" fill="#C4F4FF"/>
+<g id="Vector 2">
+<path d="M18.7471 14.3115L21.161 10.119L23.6172 14.3962H28.572L26.1158 18.6311H23.6595L21.288 22.9083L18.7048 27.1855L13.7924 27.1431L16.1639 22.9083H21.288L19.9752 20.7062L21.161 18.6311L18.7471 14.3115Z" fill="#6FDCFF"/>
+<path d="M15.0205 16.4713H10.1504L12.5642 12.2365H17.519L15.0205 16.4713Z" fill="#6FDCFF"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_215_739">
+<rect width="30" height="29" fill="white"/>
+</clipPath>
+</defs>
+</svg>

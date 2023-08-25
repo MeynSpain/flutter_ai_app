@@ -47,6 +47,13 @@ class _ChatScreenState extends State<ChatScreen> {
         return Scaffold(
           appBar: AppBar(
             title: chatName != null ? Text(chatName) : Text(''),
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(4),
+              child: Container(
+                color: Color(0xFF00D1FF),
+                height: 2,
+              ),
+            ),
             leading: Builder(
               builder: (context) {
                 return IconButton(

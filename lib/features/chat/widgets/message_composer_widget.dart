@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai/core/theme/extensions/message_composer.dart';
+import 'package:flutter_ai/core/theme/extensions/message_input_container.dart';
 import 'package:flutter_ai/features/chat/bloc/chat_bloc.dart';
 import 'package:flutter_ai/features/chat/model/model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +13,8 @@ class MessageComposerWidget extends StatefulWidget {
   State<MessageComposerWidget> createState() => _MessageComposerWidgetState();
 }
 
-class _MessageComposerWidgetState extends State<MessageComposerWidget> with SingleTickerProviderStateMixin {
+class _MessageComposerWidgetState extends State<MessageComposerWidget>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _textController = TextEditingController();
   late AnimationController _animationController;
 
@@ -26,7 +28,6 @@ class _MessageComposerWidgetState extends State<MessageComposerWidget> with Sing
     );
     super.initState();
     _textController.addListener(_onTextChanged);
-
   }
 
   @override
@@ -46,17 +47,29 @@ class _MessageComposerWidgetState extends State<MessageComposerWidget> with Sing
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final themeMessageComposer = Theme.of(context).extension<MessageComposer>();
+    final themeMessageComposer =
+        Theme.of(context).extension<MessageInputContainer>();
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
         return Container(
-          decoration: BoxDecoration(color: theme.primaryColor),
+          padding: const EdgeInsets.only(
+            left: 16,
+            top: 10,
+            right: 16,
+            bottom: 16
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              top: BorderSide(color: Color(0xFFF2F3F5))
+            ),
+          ),
           child: Row(
             children: [
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.all(16),
-                  decoration: themeMessageComposer!.shapeDecoration,
+                  decoration: themeMessageComposer!.boxDecoration,
                   // height: 70,
                   child: TextField(
                     controller: _textController,
@@ -74,7 +87,7 @@ class _MessageComposerWidgetState extends State<MessageComposerWidget> with Sing
                           side: const BorderSide(
                             width: 0.50,
                             strokeAlign: BorderSide.strokeAlignCenter,
-                            color: Color(0xFF112A46),
+                            color: Colors.red,
                           ),
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -89,7 +102,8 @@ class _MessageComposerWidgetState extends State<MessageComposerWidget> with Sing
                       ),
                       margin: EdgeInsets.only(right: 12),
                       child: RotationTransition(
-                        turns: Tween(begin: 0.0, end: 1.0).animate(_animationController),
+                        turns: Tween(begin: 0.0, end: 1.0)
+                            .animate(_animationController),
                         child: IconButton(
                           onPressed: () => _sendMessage(context, state),
                           icon: Transform.scale(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai/core/theme/extensions/bot_message_container.dart';
 import 'package:flutter_ai/core/theme/extensions/message_composer.dart';
+import 'package:flutter_ai/core/theme/extensions/message_input_container.dart';
 import 'package:flutter_ai/core/theme/extensions/user_message_container.dart';
 
 final iconTheme = IconThemeData(
@@ -8,16 +9,18 @@ final iconTheme = IconThemeData(
 );
 
 final mainTheme = ThemeData(
-    scaffoldBackgroundColor: const Color.fromARGB(255, 111, 218, 190),
+    scaffoldBackgroundColor: Colors.white,
     appBarTheme: AppBarTheme(
-      backgroundColor: const Color.fromARGB(
-        255,
-        8,
-        126,
-        139,
-      ),
+      backgroundColor: Colors.white,
       actionsIconTheme: iconTheme,
       iconTheme: iconTheme,
+      centerTitle: true,
+      titleTextStyle: const TextStyle(
+        color: Colors.black,
+        fontSize: 18,
+        fontFamily: 'Montserrat',
+        fontWeight: FontWeight.w600,
+      ),
     ),
     primaryColor: const Color.fromARGB(
       255,
@@ -26,6 +29,38 @@ final mainTheme = ThemeData(
       139,
     ),
     extensions: <ThemeExtension<dynamic>>[
+      MessageInputContainer(
+        boxDecoration: BoxDecoration(
+          color: const Color(0xFFF2F3F5),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        textAlign: TextAlign.left,
+        textStyle: const TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.w500,
+          fontSize: 18,
+          fontFamily: 'Montserrat',
+        ),
+        inputDecoration: const InputDecoration(
+          contentPadding: EdgeInsets.only(
+            left: 24,
+            right: 24,
+            top: 16,
+            bottom: 16,
+          ),
+          border: InputBorder.none,
+          hintText: 'Введите запрос',
+          hintStyle: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w100,
+            fontSize: 14,
+            fontFamily: 'Montserrat',
+          ),
+        ),
+      ),
+
+
+
       MessageComposer(
         shapeDecoration: ShapeDecoration(
           color: const Color(0xFF6FDABE),
@@ -54,20 +89,20 @@ final mainTheme = ThemeData(
           fontWeight: FontWeight.w500,
         ),
         inputDecoration: const InputDecoration(
-            contentPadding: EdgeInsets.only(
-              left: 24,
-              right: 24,
-              top: 16,
-              bottom: 16,
-            ),
-            border: InputBorder.none,
-            hintText: 'Text...',
-            hintStyle: TextStyle(
-              color: Color(0xCC112A46),
-              fontSize: 14,
-              fontFamily: 'Noah',
-              fontWeight: FontWeight.w700,
-            ),
+          contentPadding: EdgeInsets.only(
+            left: 24,
+            right: 24,
+            top: 16,
+            bottom: 16,
+          ),
+          border: InputBorder.none,
+          hintText: 'Text...',
+          hintStyle: TextStyle(
+            color: Color(0xCC112A46),
+            fontSize: 14,
+            fontFamily: 'Noah',
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
 
@@ -158,7 +193,7 @@ final darkTheme = ThemeData(
 
   textTheme: TextTheme(
     bodyMedium: const TextStyle(
-      color: Colors.white,
+      color: Colors.black,
       fontWeight: FontWeight.w500,
       fontSize: 20,
     ),

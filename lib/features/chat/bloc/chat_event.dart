@@ -16,7 +16,7 @@ class ChatGetMessagesEvent extends ChatEvent {}
 
 /// Переключение текущего чата
 class ChatSelectChatEvent extends ChatEvent {
-  final ChatName? chat;
+  final ChatDTO? chat;
 
   ChatSelectChatEvent({this.chat});
 }

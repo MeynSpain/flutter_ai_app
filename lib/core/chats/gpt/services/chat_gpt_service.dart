@@ -82,6 +82,17 @@ class ChatGptService {
     return messages;
   }
 
+  // Future<List<ChatDTO>> getLastSystemMessages(List<ChatName> chats) async {
+  //   List<ChatDTO> chatsDTO = [];
+  //   for (var chat in chats) {
+  //     ChatGpt message =
+  //         await messageRepository.getLastSystemMessageFromChat(chat);
+  //     chatsDTO.add(ChatDTO(chatName: chat, lastText: message.text));
+  //   }
+  //
+  //   return chatsDTO;
+  // }
+
   /////// CHATS ////////
 
   Future<ChatName> createNewChat(String chatName) async {
@@ -97,9 +108,16 @@ class ChatGptService {
     return chat;
   }
 
-  Future<List<ChatName>> getChats() async {
+  Future<List<ChatDTO>> getChats() async {
     List<ChatName> chats = await chatNameRepository.getAllChatNames();
-    return chats;
+    List<ChatDTO> chatsDTO = [];
+    for (var chat in chats) {
+      ChatGpt? message =
+          await messageRepository.getLastSystemMessageFromChat(chat);
+      chatsDTO.add(ChatDTO(chatName: chat, lastText: message?.text));
+    }
+
+    return chatsDTO;
   }
 
   Future<ChatName?> getChatById(int id) async {

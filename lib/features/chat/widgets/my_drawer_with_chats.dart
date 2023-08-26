@@ -67,10 +67,10 @@ class MyDrawerWithChats extends StatelessWidget {
                     // reverse: true,
                     itemCount: state.chats.length,
                     itemBuilder: (context, index) {
-                      int indexOf = state.chats[index].name!.indexOf('.');
+                      int indexOf = state.chats[index].chatName.name!.indexOf('.');
 
                       String chatName = // Чтобы самый новый чат был сверху
-                          state.chats[state.chats.length - (index + 1)].name!
+                          state.chats[state.chats.length - (index + 1)].chatName.name!
                               .substring(indexOf + 1);
 
                       return ListTile(

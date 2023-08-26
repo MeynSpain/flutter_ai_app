@@ -42,7 +42,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     try {
       // Сохранение сообщения пользователя в бд
-      chatGptService.saveMessage(event.message, state.selectedChat!);
+      chatGptService.saveMessage(event.message, state.selectedChat!.chatName);
 
       // Отправка сообщения (контекст + новое)
       Message message =
@@ -55,7 +55,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           status: Status.responseReceived));
 
       // Сохранение сообщения GPT в бд
-      chatGptService.saveMessage(message, state.selectedChat!);
+      chatGptService.saveMessage(message, state.selectedChat!.chatName);
     } catch (e, st) {
       state.messages.removeLast();
       emit(state.copyWith(
@@ -82,7 +82,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       }
 
       List<Message> messages =
-          await chatGptService.getMessagesFromChat(state.selectedChat!);
+          await chatGptService.getMessagesFromChat(state.selectedChat!.chatName);
 
       emit(state.copyWith(messages: messages, status: Status.success));
     } catch (e, st) {
@@ -102,23 +102,33 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(state.copyWith(status: Status.chatsLoading));
 
     try {
-      List<ChatName> chats = await chatGptService.getChats();
+      List<ChatDTO> chats = await chatGptService.getChats();
 
       // Удаление сообщений с истекшим сроком годности
       // Пока во время загрузки чатов, мб потом в другое место уберу
       add(ChatDeleteExpiredMessagesEvent());
 
-      ChatName? selectedChat;
+      ChatDTO? selectedChatDTO;
       if (chats.isEmpty) {
-        selectedChat = await chatGptService.createNewChat('New chat');
-        chats.add(selectedChat);
+        ChatName? selectedChat = await chatGptService.createNewChat('New chat');
+
+        if (selectedChat == null) {
+          emit(state.copyWith(
+            status: Status.error,
+          ));
+          return;
+        }
+
+        selectedChatDTO!.chatName = selectedChat;
+
+        chats.add(selectedChatDTO);
       } else {
-        selectedChat = chats.last;
+        selectedChatDTO = chats.last;
       }
 
       emit(state.copyWith(
         chats: chats,
-        selectedChat: selectedChat,
+        selectedChat: selectedChatDTO,
         status: Status.chatsLoaded,
       ));
 
@@ -191,13 +201,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     try {
       ChatName chat = await chatGptService.createNewChat(event.chatName);
-
+      ChatDTO chatDTO = ChatDTO(chatName: chat);
       emit(state.copyWith(
-        chats: [...state.chats, chat],
+        chats: [...state.chats, chatDTO],
         status: Status.chatCreated,
       ));
 
-      add(ChatSelectChatEvent(chat: chat));
+      add(ChatSelectChatEvent(chat: chatDTO));
     } catch (e, st) {
       emit(state.copyWith(status: Status.error));
       getIt<Talker>().handle(e, st);

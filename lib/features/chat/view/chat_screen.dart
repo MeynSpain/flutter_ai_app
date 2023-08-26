@@ -39,10 +39,10 @@ class _ChatScreenState extends State<ChatScreen> {
       builder: (context, state) {
         String? chatName;
         if (state.selectedChat != null) {
-          int indexOf = state.selectedChat!.name!.indexOf('.');
+          int indexOf = state.selectedChat!.chatName.name!.indexOf('.');
 
           chatName = // Чтобы самый новый чат был сверху
-              state.selectedChat!.name!.substring(indexOf + 1);
+              state.selectedChat!.chatName.name!.substring(indexOf + 1);
         }
         return Scaffold(
           appBar: AppBar(
@@ -50,7 +50,7 @@ class _ChatScreenState extends State<ChatScreen> {
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(4),
               child: Container(
-                color: Color(0xFF00D1FF),
+                color: theme.primaryColor,
                 height: 2,
               ),
             ),

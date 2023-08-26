@@ -22,14 +22,23 @@ final mainTheme = ThemeData(
         fontWeight: FontWeight.w600,
       ),
     ),
-    primaryColor: const Color.fromARGB(
-      255,
-      8,
-      126,
-      139,
+    primaryColor: Color(0xFF00D1FF),
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(
+        color: Colors.black,
+        fontFamily: 'Montserrat',
+        // fontStyle: FontStyle.normal,
+        fontSize: 18,
+        fontWeight: FontWeight.w500,
+      ),
+      bodyMedium: TextStyle(
+        color: Colors.black,
+        fontFamily: 'Montserrat',
+        fontStyle: FontStyle.normal,
+        fontSize: 14,
+      ),
     ),
     extensions: <ThemeExtension<dynamic>>[
-
       MessageInputContainer(
         boxDecoration: BoxDecoration(
           color: const Color(0xFFF2F3F5),

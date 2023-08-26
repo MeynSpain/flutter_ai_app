@@ -3,8 +3,8 @@ part of 'chat_bloc.dart';
 class ChatState extends Equatable {
   final List<Message> messages;
   final Status status;
-  final List<ChatName> chats;
-  final ChatName? selectedChat;
+  final List<ChatDTO> chats;
+  final ChatDTO? selectedChat;
 
   const ChatState._({
     required this.messages,
@@ -24,8 +24,8 @@ class ChatState extends Equatable {
 
   ChatState copyWith({
     List<Message>? messages,
-    List<ChatName>? chats,
-    ChatName? selectedChat,
+    List<ChatDTO>? chats,
+    ChatDTO? selectedChat,
     Status? status,
   }) {
     return ChatState._(

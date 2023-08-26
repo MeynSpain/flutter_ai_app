@@ -51,10 +51,6 @@ class _ChatWidgetState extends State<ChatWidget> {
                     final bool isUser = state.messages[index].role ==
                         OpenAIChatMessageRole.user;
                     return Container(
-                      // margin: EdgeInsets.all(10),
-                      // decoration: BoxDecoration(
-                      //   color: Colors.red
-                      // ),
                       child: Stack(
                         children: [
                           Container(

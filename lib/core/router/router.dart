@@ -3,5 +3,5 @@ import 'package:flutter_ai/features/chat/view/chats_screen.dart';
 
 final routes = {
   '/': (context) => ChatsScreen(),
-  '/chats': (context) => ChatScreen(),
+  '/chat': (context) => ChatScreen(),
 };

@@ -39,6 +39,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       status: Status.sendingMessage,
       messages: [...state.messages, event.message, messageSending],
     ));
+    state.selectedChat?.lastText = messageSending.content;
 
     try {
       // Сохранение сообщения пользователя в бд
@@ -48,7 +49,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       Message message =
           await chatGptService.getAnswer([...state.messages, event.message]);
 
+
+
       state.messages.removeLast();
+
+      state.selectedChat?.lastText = message.content;
 
       emit(state.copyWith(
           messages: [...state.messages, message],
@@ -62,7 +67,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         messages: [...state.messages, event.message],
         status: Status.error,
       ));
-
+      state.selectedChat?.lastText = messageError.content;
       getIt<Talker>().handle(e, st);
     }
   }
@@ -202,6 +207,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     try {
       ChatName chat = await chatGptService.createNewChat(event.chatName);
       ChatDTO chatDTO = ChatDTO(chatName: chat);
+
       emit(state.copyWith(
         chats: [...state.chats, chatDTO],
         status: Status.chatCreated,
@@ -224,7 +230,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(state.copyWith(status: Status.chatDeleting));
 
     try {
-      await chatGptService.deleteChat(event.chat);
+      await chatGptService.deleteChat(event.chat.chatName);
 
       if (event.chat == state.selectedChat) {
         state.messages.clear();

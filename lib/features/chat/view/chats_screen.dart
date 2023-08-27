@@ -1,7 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_ai/core/constant/constant.dart';
 import 'package:flutter_ai/core/injection.dart';
 import 'package:flutter_ai/features/chat/bloc/chat_bloc.dart';
+import 'package:flutter_ai/features/chat/model/dto/chat.dart';
+import 'package:flutter_ai/features/chat/widgets/confirm_dialog_widget.dart';
+import 'package:flutter_ai/features/chat/widgets/create_new_chat_widget.dart';
+import 'package:flutter_ai/features/chat/widgets/drawer_menu_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatsScreen extends StatefulWidget {
@@ -17,8 +23,26 @@ class _ChatsScreenState extends State<ChatsScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Чаты'),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.menu))],
+        centerTitle: false,
+        title: const Padding(
+          padding: EdgeInsets.only(
+            left: 8,
+          ),
+          child: Text('Чаты'),
+        ),
+        actions: [
+          Builder(builder: (context) {
+            return Padding(
+              padding: const EdgeInsets.only(
+                right: 15,
+              ),
+              child: IconButton(
+                onPressed: () => Scaffold.of(context).openEndDrawer(),
+                icon: Icon(Icons.menu),
+              ),
+            );
+          }),
+        ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(4),
           child: Container(
@@ -27,6 +51,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
           ),
         ),
       ),
+      endDrawer: DrawerMenuWidget(),
       floatingActionButton: BlocBuilder<ChatBloc, ChatState>(
         bloc: getIt<ChatBloc>(),
         builder: (context, state) {
@@ -41,7 +66,10 @@ class _ChatsScreenState extends State<ChatsScreen> {
         bloc: getIt<ChatBloc>(),
         builder: (context, state) {
           if (state.status == Status.chatsLoading) {
-            return const CircularProgressIndicator();
+            return Center(
+                child: CircularProgressIndicator(
+              color: theme.primaryColor,
+            ));
           } else if (state.status == Status.error) {
             return Center(
               child: Text(
@@ -66,19 +94,29 @@ class _ChatsScreenState extends State<ChatsScreen> {
                         .substring(indexOf + 1);
 
                 return ListTile(
-                  leading: IconButton(
-                    icon: Icon(Icons.star_border),
-                    onPressed: () {},
-                  ),
+                  // leading: IconButton(
+                  //   icon: Icon(Icons.star_border),
+                  //   onPressed: () {},
+                  // ),
+                  onTap: () => _selectChat(
+                      state, state.chats[state.chats.length - (index + 1)]),
                   trailing: IconButton(
-                    icon: Icon(Icons.delete_outline),
-                    onPressed: () {},
+                    icon: const Icon(Icons.delete_forever_rounded),
+                    onPressed: () => _onDeleteChatPressed(
+                        context, state.chats[state.chats.length - (index + 1)]),
                   ),
-                  title: Text(chatName, style: theme.textTheme.bodyLarge),
-                  subtitle: Text(
-                    state.chats[index].lastText ?? ' ',
-                    style: theme.textTheme.bodyMedium,
-                    overflow: TextOverflow.ellipsis,
+                  title: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(chatName, style: theme.textTheme.bodyLarge),
+                  ),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      state.chats[state.chats.length - (index + 1)].lastText ??
+                          ' ',
+                      style: theme.textTheme.bodyMedium,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 );
               },
@@ -89,54 +127,33 @@ class _ChatsScreenState extends State<ChatsScreen> {
     );
   }
 
-  void _selectChat(ChatState state, int index) {
-    getIt<ChatBloc>().add(ChatSelectChatEvent(chat: state.chats[index]));
+  void _selectChat(ChatState state, ChatDTO chat) {
+    getIt<ChatBloc>().add(ChatSelectChatEvent(chat: chat));
+
+    Navigator.pushNamed(context, '/chat');
+  }
+
+  void _onDeleteChatPressed(BuildContext context, ChatDTO chat) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ConfirmDialogWidget(
+          chat: chat,
+        );
+      },
+    );
   }
 
   void _onNewChatPressed(BuildContext context, ChatState state) {
-    showDialog(context: context, builder: (context) {
-      final theme = Theme.of(context);
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Container(
-          height: 150,
-          width: 300,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Новый чат'),
-              Container(
-                padding: EdgeInsets.only(
-                  left: 10,
-                  right: 10
-                ),
-                margin: const EdgeInsets.only(
-                  left: 24,
-                  right: 24,
-                  bottom: 30,
-                  top: 30,
-                ),
-                decoration: ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: BorderSide(
-                      color: theme.primaryColor,
-                    )
-                  ),
-                  // color: theme.primaryColor,
-                ),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    });
+    showDialog(
+        context: context,
+        builder: (context) {
+          return BlocBuilder<ChatBloc, ChatState>(
+            bloc: getIt<ChatBloc>(),
+            builder: (context, state) {
+              return const CreateNewChatWidget();
+            },
+          );
+        });
   }
 }

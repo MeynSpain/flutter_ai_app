@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai/core/chats/gpt/gpt.dart';
+import 'package:flutter_ai/core/constant/constant.dart';
 import 'package:flutter_ai/features/chat/bloc/chat_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -54,33 +55,50 @@ class _ChatScreenState extends State<ChatScreen> {
                 height: 2,
               ),
             ),
-            leading: Builder(
-              builder: (context) {
-                return IconButton(
-                  icon: SvgPicture.asset('assets/icons/list_chats_icon.svg'),
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                );
-              },
-            ),
+            // leading: Builder(
+            //   builder: (context) {
+            //     return IconButton(
+            //       icon: SvgPicture.asset('assets/icons/list_chats_icon.svg'),
+            //       onPressed: () => Scaffold.of(context).openDrawer(),
+            //     );
+            //   },
+            // ),
             actions: [
-              Builder(
-                builder: (context) {
-                  return IconButton(
-                      onPressed: () => Scaffold.of(context).openEndDrawer(),
-                      icon: Icon(Icons.settings));
-                },
-              ),
+              Builder(builder: (context) {
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    right: 15,
+                  ),
+                  child: IconButton(
+                    onPressed: () => Scaffold.of(context).openEndDrawer(),
+                    icon: Icon(Icons.menu),
+                  ),
+                );
+              }),
+              // Builder(
+              //   builder: (context) {
+              //     return IconButton(
+              //         onPressed: () => Scaffold.of(context).openEndDrawer(),
+              //         icon: Icon(Icons.settings));
+              //   },
+              // ),
             ],
           ),
-          drawer: MyDrawerWithChats(),
-          endDrawer: DrawerSettings(),
+          // drawer: MyDrawerWithChats(),
+          endDrawer: DrawerMenuWidget(),
           body: SafeArea(
-            child: Column(
-              children: [
-                ChatWidget(),
-                MessageComposerWidget(),
-              ],
-            ),
+            child: state.status == Status.loading
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: theme.primaryColor,
+                    ),
+                  )
+                : Column(
+                    children: [
+                      ChatWidget(),
+                      MessageComposerWidget(),
+                    ],
+                  ),
           ),
         );
       },

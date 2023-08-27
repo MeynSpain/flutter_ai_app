@@ -88,6 +88,10 @@ flutter:
           weight: 600
         - asset: assets/fonts/Montserrat/static/Montserrat-Thin.ttf
           weight: 100
+    - family: Tele-Marines
+      fonts:
+        - asset: assets/fonts/Tele-Marines/telemarines.ttf
+
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

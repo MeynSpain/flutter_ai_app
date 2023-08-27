@@ -68,16 +68,19 @@ class _ChatWidgetState extends State<ChatWidget> {
                               bottom: 10,
                             ),
                             decoration: BoxDecoration(
-                              color: isUser ? userTheme?.color : botTheme?.color,
+                              color:
+                                  isUser ? userTheme?.color : botTheme?.color,
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child:
-                                MarkdownBody(data: state.messages[index].content),
+                            child: MarkdownBody(
+                                data: state.messages[index].content),
                           ),
                           Positioned(
                             child: isUser
-                                ? SvgPicture.asset('assets/icons/user_avatar.svg')
-                                : SvgPicture.asset('assets/icons/bot_avatar.svg'),
+                                ? SvgPicture.asset(
+                                    'assets/icons/user_avatar.svg')
+                                : SvgPicture.asset(
+                                    'assets/icons/bot_avatar.svg'),
                             bottom: 8,
                             right: 8,
                           ),

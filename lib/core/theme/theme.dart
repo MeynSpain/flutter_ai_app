@@ -37,6 +37,19 @@ final mainTheme = ThemeData(
         fontStyle: FontStyle.normal,
         fontSize: 14,
       ),
+      headlineMedium: TextStyle(
+        color: Colors.black,
+        fontFamily: 'Montserrat',
+        // fontStyle: FontStyle.normal,
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+      ),
+      headlineLarge: TextStyle(
+        color: Colors.black,
+        fontSize: 32,
+        fontFamily: 'Tele-Marines',
+        fontWeight: FontWeight.w400,
+      ),
     ),
     extensions: <ThemeExtension<dynamic>>[
       MessageInputContainer(

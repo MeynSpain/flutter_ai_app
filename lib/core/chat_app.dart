@@ -16,6 +16,7 @@ class ChatApp extends StatelessWidget {
 
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'ChatGPT',
         theme: mainTheme,
         routes: routes,

@@ -42,7 +42,7 @@ class ChatGetChatByIdEvent extends ChatEvent {
 class ChatDeleteExpiredMessagesEvent extends ChatEvent {}
 
 class ChatDeleteChatEvent extends ChatEvent {
-  final ChatName chat;
+  final ChatDTO chat;
 
   ChatDeleteChatEvent({required this.chat});
 }

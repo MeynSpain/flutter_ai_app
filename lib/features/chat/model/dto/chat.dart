@@ -5,8 +5,8 @@ class ChatDTO {
   String? _lastText;
 
   ChatDTO({
-    required chatName,
-    lastText,
+    required ChatName chatName,
+    String? lastText,
   }) {
     _chatName = chatName;
     _lastText = lastText;

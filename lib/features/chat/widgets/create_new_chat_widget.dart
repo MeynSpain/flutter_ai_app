@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai/core/injection.dart';
 import 'package:flutter_ai/features/chat/bloc/chat_bloc.dart';
+import 'package:flutter_ai/features/chat/model/dto/chat.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CreateNewChatWidget extends StatefulWidget {
-  const CreateNewChatWidget({super.key});
+  final String title;
+  final bool isCreate;
+  final ChatDTO? chat;
+
+  const CreateNewChatWidget(
+      {super.key, required this.title, required this.isCreate, this.chat});
 
   @override
   State<CreateNewChatWidget> createState() => _CreateNewChatWidgetState();
@@ -49,9 +55,14 @@ class _CreateNewChatWidgetState extends State<CreateNewChatWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 15,),
-            Text('Новый чат',
-            style: theme.textTheme.headlineMedium,),
+            const SizedBox(
+              height: 15,
+            ),
+            Text(
+              widget.title,
+              style: theme.textTheme.headlineMedium,
+              overflow: TextOverflow.ellipsis,
+            ),
             Container(
               padding: const EdgeInsets.only(left: 10, right: 0),
               margin: const EdgeInsets.only(
@@ -87,8 +98,14 @@ class _CreateNewChatWidgetState extends State<CreateNewChatWidget> {
                         if (text.isNotEmpty) {
                           // Обработка нажатия кнопки
                           Navigator.of(context).pop();
-                          getIt<ChatBloc>()
-                              .add(ChatCreateNewChatEvent(chatName: text));
+                          if (widget.isCreate) {
+                            getIt<ChatBloc>()
+                                .add(ChatCreateNewChatEvent(chatName: text));
+                          } else {
+                            getIt<ChatBloc>().add(
+                              ChatRenameChatNameEvent(name: text, chat: widget.chat!),
+                            );
+                          }
                         }
                       },
                       icon: SvgPicture.asset('assets/icons/create_chat.svg'),

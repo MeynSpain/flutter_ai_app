@@ -52,4 +52,9 @@ class ChatNameRepository {
     }
   }
 
+  Future<ChatName> renameChat(ChatName chat, String name) async {
+    chat.name = name;
+    chat.save();
+    return chat;
+  }
 }

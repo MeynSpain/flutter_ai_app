@@ -6,3 +6,4 @@ export 'create_new_chat_widget.dart';
 export 'confirm_dialog_widget.dart';
 export 'drawer_menu_widget.dart';
 export 'menu_item_widget.dart';
+export 'main_app_bar.dart';

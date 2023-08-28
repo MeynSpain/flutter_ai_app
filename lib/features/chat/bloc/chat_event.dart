@@ -46,3 +46,10 @@ class ChatDeleteChatEvent extends ChatEvent {
 
   ChatDeleteChatEvent({required this.chat});
 }
+
+class ChatRenameChatNameEvent extends ChatEvent {
+  final String name;
+  final ChatDTO chat;
+
+  ChatRenameChatNameEvent({required this.name, required this.chat});
+}

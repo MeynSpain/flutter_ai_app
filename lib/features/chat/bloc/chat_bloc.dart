@@ -17,7 +17,7 @@ part 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatGptService chatGptService;
-  
+
   final Message messageSending = Message.fromAI(content: 'Пишет...');
   final Message messageError = Message.fromAI(content: 'Произошла ошибка');
 
@@ -30,6 +30,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<ChatCreateNewChatEvent>(_createNewChat);
     on<ChatDeleteExpiredMessagesEvent>(_deleteExpiredMessages);
     on<ChatDeleteChatEvent>(_deleteChat);
+    on<ChatRenameChatNameEvent>(_renameChat);
   }
 
   /// Send message to chatGPT and get answer
@@ -48,8 +49,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       // Отправка сообщения (контекст + новое)
       Message message =
           await chatGptService.getAnswer([...state.messages, event.message]);
-
-
 
       state.messages.removeLast();
 
@@ -86,8 +85,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         return;
       }
 
-      List<Message> messages =
-          await chatGptService.getMessagesFromChat(state.selectedChat!.chatName);
+      List<Message> messages = await chatGptService
+          .getMessagesFromChat(state.selectedChat!.chatName);
 
       emit(state.copyWith(messages: messages, status: Status.success));
     } catch (e, st) {
@@ -239,6 +238,27 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       state.chats.remove(event.chat);
 
       emit(state.copyWith(status: Status.chatDeleted));
+    } catch (e, st) {
+      emit(state.copyWith(status: Status.error));
+      getIt<Talker>().handle(e, st);
+    }
+  }
+
+  Future<void> _renameChat(
+      ChatRenameChatNameEvent event, Emitter<ChatState> emit) async {
+    emit(state.copyWith(status: Status.chatRenaming));
+
+    try {
+      ChatName chat = await chatGptService.renameChat(event.chat, event.name);
+      ChatDTO renamedChat =
+          ChatDTO(chatName: chat, lastText: event.chat.lastText);
+      int chatIndex =
+          state.chats.indexWhere((element) => event.chat == element);
+      state.chats[chatIndex] = renamedChat;
+      emit(state.copyWith(
+        status: Status.chatRenamed,
+        chats: state.chats,
+      ));
     } catch (e, st) {
       emit(state.copyWith(status: Status.error));
       getIt<Talker>().handle(e, st);

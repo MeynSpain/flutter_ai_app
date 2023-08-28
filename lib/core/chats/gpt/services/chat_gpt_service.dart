@@ -108,6 +108,12 @@ class ChatGptService {
     return chat;
   }
 
+  Future<ChatName> renameChat(ChatDTO chatDTO, String name) async {
+    Uuid uuid = Uuid();
+    String uuidName = uuid.v1() + '.' + name;
+    return await chatNameRepository.renameChat(chatDTO.chatName, uuidName);
+  }
+
   Future<List<ChatDTO>> getChats() async {
     List<ChatName> chats = await chatNameRepository.getAllChatNames();
     List<ChatDTO> chatsDTO = [];

@@ -6,21 +6,23 @@ import 'package:flutter_svg/flutter_svg.dart';
 class MenuItemWidget extends StatelessWidget {
   final SvgPicture icon;
   final String caption;
+  // Function? onTap;
+  VoidCallback? onTap;
 
-  const MenuItemWidget({
+  MenuItemWidget({
     Key? key, // Исправлено ключевое слово key
     required this.icon,
     required this.caption,
+    this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return InkWell(
-      onTap: () {
-        log('########### Click $caption');
-      },
-      child: Ink( // Добавлен Ink внутри InkWell
+      onTap: onTap,
+      child: Ink(
+        // Добавлен Ink внутри InkWell
         width: 260,
         height: 38,
         decoration: ShapeDecoration(
@@ -30,7 +32,8 @@ class MenuItemWidget extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20), // Добавлено горизонтальное отступление
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          // Добавлено горизонтальное отступление
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

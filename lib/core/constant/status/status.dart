@@ -11,4 +11,6 @@ enum Status {
   chatCreated,
   chatDeleting,
   chatDeleted,
+  chatRenaming,
+  chatRenamed,
 }

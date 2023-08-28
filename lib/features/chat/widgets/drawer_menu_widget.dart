@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_ai/features/chat/widgets/menu_item_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -35,6 +37,9 @@ class DrawerMenuWidget extends StatelessWidget {
           MenuItemWidget(
             icon: SvgPicture.asset('assets/icons/settings.svg'),
             caption: 'Настройки',
+            onTap: (){
+              _onSettingsClick(context);
+            },
           ),
           MenuItemWidget(
             icon: SvgPicture.asset('assets/icons/share.svg'),
@@ -59,4 +64,11 @@ class DrawerMenuWidget extends StatelessWidget {
       ),
     );
   }
+
+  void _onSettingsClick(BuildContext context) {
+    log('############### setting click #############');
+    Navigator.pushNamed(context, '/settings');
+  }
+
+
 }

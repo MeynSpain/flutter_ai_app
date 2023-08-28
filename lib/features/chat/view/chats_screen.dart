@@ -100,6 +100,8 @@ class _ChatsScreenState extends State<ChatsScreen> {
                   // ),
                   onTap: () => _selectChat(
                       state, state.chats[state.chats.length - (index + 1)]),
+                  onLongPress: () => _renameChat(context, state,
+                      state.chats[state.chats.length - (index + 1)]),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete_forever_rounded),
                     onPressed: () => _onDeleteChatPressed(
@@ -107,7 +109,11 @@ class _ChatsScreenState extends State<ChatsScreen> {
                   ),
                   title: Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: Text(chatName, style: theme.textTheme.bodyLarge),
+                    child: Text(
+                      chatName,
+                      style: theme.textTheme.bodyLarge,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   subtitle: Padding(
                     padding: const EdgeInsets.only(left: 10),
@@ -151,7 +157,32 @@ class _ChatsScreenState extends State<ChatsScreen> {
           return BlocBuilder<ChatBloc, ChatState>(
             bloc: getIt<ChatBloc>(),
             builder: (context, state) {
-              return const CreateNewChatWidget();
+              return const CreateNewChatWidget(
+                title: 'Новый чат',
+                isCreate: true,
+              );
+            },
+          );
+        });
+  }
+
+  _renameChat(BuildContext context, ChatState state, ChatDTO chat) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          int indexOf = chat.chatName.name!.indexOf('.');
+
+          String chatName = // Чтобы самый новый чат был сверху
+              chat.chatName.name!.substring(indexOf + 1);
+
+          return BlocBuilder<ChatBloc, ChatState>(
+            bloc: getIt<ChatBloc>(),
+            builder: (context, state) {
+              return CreateNewChatWidget(
+                title: chatName,
+                isCreate: false,
+                chat: chat,
+              );
             },
           );
         });

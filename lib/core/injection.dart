@@ -1,5 +1,7 @@
 import 'package:flutter_ai/core/constant/constant.dart';
+import 'package:flutter_ai/core/utils/prefs_utils.dart';
 import 'package:flutter_ai/features/chat/bloc/chat_bloc.dart';
+import 'package:flutter_ai/features/settings/bloc/settings_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -23,24 +25,29 @@ Future<void> init() async {
   getIt.registerSingleton(talker);
   getIt<Talker>().info('Application started...');
 
+  // Prefs
   final prefs = await SharedPreferences.getInstance();
   getIt.registerLazySingleton(() => prefs);
+  getIt.registerLazySingleton(() => PrefsUtils(prefs: getIt()));
 
-  int? days = prefs.getInt(PrefsNames.expirationDate);
-
-  if (days == null) {
-    prefs.setInt(PrefsNames.expirationDate, expiredDays);
-  }
+  // int? days = prefs.getInt(PrefsNames.expirationDate);
+  //
+  // if (days == null) {
+  //   prefs.setInt(PrefsNames.expirationDate, expiredDays);
+  // }
 
   talker.info('Expiration days = ${prefs.getInt(PrefsNames.expirationDate)}');
 
-
+  // SERVICE
   ChatGptService chatGptService = ChatGptService();
   getIt.registerSingleton(chatGptService);
 
   // chatGptService.deleteAllMessages();
   // chatGptService.deleteAllChats();
 
+  // Settings bloc
+  getIt.registerLazySingleton<SettingsBloc>(() => SettingsBloc());
+  
   // Register ChatBloc
   getIt
       .registerLazySingleton<ChatBloc>(() => ChatBloc(chatGptService: getIt()));

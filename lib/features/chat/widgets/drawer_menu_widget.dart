@@ -57,6 +57,13 @@ class DrawerMenuWidget extends StatelessWidget {
             icon: SvgPicture.asset('assets/icons/verified_user.svg'),
             caption: 'Политика\nконфиденциальности',
           ),
+          MenuItemWidget(
+            icon: SvgPicture.asset('assets/icons/verified_user.svg'),
+            caption: 'Подписка',
+            onTap: () {
+              Navigator.pushNamed(context, '/subscribe');
+            },
+          ),
           const SizedBox(
             height: 100,
           ),

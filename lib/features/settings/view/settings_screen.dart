@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai/features/chat/widgets/widgets.dart';
+import 'package:flutter_ai/generated/l10n.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SettingsScreen extends StatelessWidget {
   SettingsScreen({super.key});
 
-  List<String> settingsList = ['Автоудаление'];
+  List<String> settingsList = [];
+
 
   @override
   Widget build(BuildContext context) {
+    settingsList = [S.of(context).autodelete];
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Настройки'),
+        title: Text(S.of(context).settings),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(4),
+          preferredSize: const Size.fromHeight(4),
           child: Container(
             color: theme.primaryColor,
             height: 2,
@@ -31,7 +34,7 @@ class SettingsScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            margin: EdgeInsets.only(
+            margin: const EdgeInsets.only(
               left: 15,
               right: 15,
               top: 10,

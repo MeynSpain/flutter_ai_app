@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_ai/features/chat/widgets/menu_item_widget.dart';
+import 'package:flutter_ai/generated/l10n.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class DrawerMenuWidget extends StatelessWidget {
@@ -36,30 +37,30 @@ class DrawerMenuWidget extends StatelessWidget {
           ),
           MenuItemWidget(
             icon: SvgPicture.asset('assets/icons/settings.svg'),
-            caption: 'Настройки',
+            caption: S.of(context).settings,
             onTap: (){
               _onSettingsClick(context);
             },
           ),
           MenuItemWidget(
             icon: SvgPicture.asset('assets/icons/share.svg'),
-            caption: 'Поделиться',
+            caption: S.of(context).share,
           ),
           MenuItemWidget(
             icon: SvgPicture.asset('assets/icons/star.svg'),
-            caption: 'Оценить нас',
+            caption: S.of(context).rateUs,
           ),
           MenuItemWidget(
             icon: SvgPicture.asset('assets/icons/sms.svg'),
-            caption: 'Связаться с нами',
+            caption: S.of(context).contactUs,
           ),
           MenuItemWidget(
             icon: SvgPicture.asset('assets/icons/verified_user.svg'),
-            caption: 'Политика\nконфиденциальности',
+            caption: S.of(context).privacyPolicy,
           ),
           MenuItemWidget(
             icon: SvgPicture.asset('assets/icons/verified_user.svg'),
-            caption: 'Подписка',
+            caption: S.of(context).subscription,
             onTap: () {
               Navigator.pushNamed(context, '/subscribe');
             },

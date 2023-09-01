@@ -7,7 +7,9 @@ import 'package:flutter_ai/core/router/router.dart';
 import 'package:flutter_ai/core/theme/theme.dart';
 import 'package:flutter_ai/features/chat/bloc/chat_bloc.dart';
 import 'package:flutter_ai/features/settings/bloc/settings_bloc.dart';
+import 'package:flutter_ai/generated/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 class ChatApp extends StatefulWidget {
@@ -18,7 +20,6 @@ class ChatApp extends StatefulWidget {
 }
 
 class _ChatAppState extends State<ChatApp> {
-
   // late StreamSubscription<List<PurchaseDetails>> _subscription;
   //
   // @override
@@ -80,6 +81,13 @@ class _ChatAppState extends State<ChatApp> {
         ),
       ],
       child: MaterialApp(
+        localizationsDelegates: const [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
         debugShowCheckedModeBanner: false,
         title: 'ChatGPT',
         theme: mainTheme,

@@ -55,14 +55,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 height: 2,
               ),
             ),
-            // leading: Builder(
-            //   builder: (context) {
-            //     return IconButton(
-            //       icon: SvgPicture.asset('assets/icons/list_chats_icon.svg'),
-            //       onPressed: () => Scaffold.of(context).openDrawer(),
-            //     );
-            //   },
-            // ),
             actions: [
               Builder(builder: (context) {
                 return Padding(

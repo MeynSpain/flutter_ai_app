@@ -4,6 +4,7 @@ import 'package:flutter_ai/core/theme/extensions/message_composer.dart';
 import 'package:flutter_ai/core/theme/extensions/message_input_container.dart';
 import 'package:flutter_ai/features/chat/bloc/chat_bloc.dart';
 import 'package:flutter_ai/features/chat/model/model.dart';
+import 'package:flutter_ai/generated/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -25,7 +26,7 @@ class _MessageComposerWidgetState extends State<MessageComposerWidget>
   void initState() {
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 5000),
+      duration: Duration(milliseconds: 500),
     );
     super.initState();
     _textController.addListener(_onTextChanged);
@@ -78,7 +79,9 @@ class _MessageComposerWidgetState extends State<MessageComposerWidget>
                     onSubmitted: (_) => _sendMessage(context, state),
                     textAlign: themeMessageComposer.textAlign,
                     style: themeMessageComposer.textStyle,
-                    decoration: themeMessageComposer.inputDecoration,
+                    decoration: themeMessageComposer.inputDecoration.copyWith(
+                      hintText: S.of(context).enterRequest,
+                    ),
                   ),
                 ),
                 Visibility(

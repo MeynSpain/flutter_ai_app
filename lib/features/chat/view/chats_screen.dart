@@ -8,6 +8,7 @@ import 'package:flutter_ai/features/chat/model/dto/chat.dart';
 import 'package:flutter_ai/features/chat/widgets/confirm_dialog_widget.dart';
 import 'package:flutter_ai/features/chat/widgets/create_new_chat_widget.dart';
 import 'package:flutter_ai/features/chat/widgets/drawer_menu_widget.dart';
+import 'package:flutter_ai/generated/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatsScreen extends StatefulWidget {
@@ -24,11 +25,11 @@ class _ChatsScreenState extends State<ChatsScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: const Padding(
-          padding: EdgeInsets.only(
+        title: Padding(
+          padding: const EdgeInsets.only(
             left: 8,
           ),
-          child: Text('Чаты'),
+          child: Text(S.of(context).chats),
         ),
         actions: [
           Builder(builder: (context) {
@@ -73,7 +74,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
           } else if (state.status == Status.error) {
             return Center(
               child: Text(
-                'Что то пошло не так',
+                S.of(context).somethingWentWrong,
                 style: theme.textTheme.bodyMedium,
               ),
             );
@@ -157,8 +158,8 @@ class _ChatsScreenState extends State<ChatsScreen> {
           return BlocBuilder<ChatBloc, ChatState>(
             bloc: getIt<ChatBloc>(),
             builder: (context, state) {
-              return const CreateNewChatWidget(
-                title: 'Новый чат',
+              return CreateNewChatWidget(
+                title: S.of(context).newChat,
                 isCreate: true,
               );
             },

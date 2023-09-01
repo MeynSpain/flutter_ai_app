@@ -3,6 +3,7 @@ import 'package:flutter_ai/core/theme/extensions/bot_message_container.dart';
 import 'package:flutter_ai/core/theme/extensions/message_composer.dart';
 import 'package:flutter_ai/core/theme/extensions/message_input_container.dart';
 import 'package:flutter_ai/core/theme/extensions/user_message_container.dart';
+import 'package:flutter_ai/generated/l10n.dart';
 
 final iconTheme = IconThemeData(
   color: Color.fromARGB(255, 0, 0, 0),
@@ -51,6 +52,8 @@ final mainTheme = ThemeData(
         fontWeight: FontWeight.w400,
       ),
     ),
+
+    /// Message Input Container
     extensions: <ThemeExtension<dynamic>>[
       MessageInputContainer(
         boxDecoration: BoxDecoration(
@@ -64,15 +67,15 @@ final mainTheme = ThemeData(
           fontSize: 18,
           fontFamily: 'Montserrat',
         ),
-        inputDecoration: const InputDecoration(
-          contentPadding: EdgeInsets.only(
+        inputDecoration: InputDecoration(
+          contentPadding: const EdgeInsets.only(
             left: 24,
             right: 24,
             top: 16,
             bottom: 16,
           ),
           border: InputBorder.none,
-          hintText: 'Введите запрос',
+          // hintText: S.of(context).enterRequest,
           hintStyle: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w100,

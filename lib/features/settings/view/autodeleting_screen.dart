@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ai/core/constant/constant.dart';
 import 'package:flutter_ai/core/injection.dart';
 import 'package:flutter_ai/features/settings/bloc/settings_bloc.dart';
+import 'package:flutter_ai/generated/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -20,7 +21,7 @@ class _AutoDeletingScreenState extends State<AutoDeletingScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Автоудаление'),
+        title: Text(S.of(context).autodelete),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(4),
           child: Container(

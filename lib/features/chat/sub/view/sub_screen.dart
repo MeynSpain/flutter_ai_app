@@ -155,7 +155,9 @@ class _SubScreenState extends State<SubScreen> {
       DateTime date = DateTime.fromMillisecondsSinceEpoch(
         int.parse(purchase.transactionDate!),
       );
-      transactionDate = ' @ ' + DateFormat('yyyy-MM-dd HH:mm:ss').format(date);
+      // transactionDate = ' @ ' + DateFormat('yyyy-MM-dd HH:mm:ss').format(date);
+      transactionDate = date.toString();
+
     }
 
     return ListTile(

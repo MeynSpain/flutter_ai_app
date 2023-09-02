@@ -88,6 +88,7 @@ class _ChatAppState extends State<ChatApp> {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: S.delegate.supportedLocales,
+        // locale: Locale('ru'),
         debugShowCheckedModeBanner: false,
         title: 'ChatGPT',
         theme: mainTheme,

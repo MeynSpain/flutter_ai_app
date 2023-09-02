@@ -172,7 +172,7 @@ class ChatGptService {
 
     getIt<Talker>().info('EXPITATION DAYS = ${expiration}');
 
-    if (expiration != null) {
+    if (expiration != null && expiration != -1) {
       isDeleted = await messageRepository.deleteMessagesOlderThan(expiration);
     }
 

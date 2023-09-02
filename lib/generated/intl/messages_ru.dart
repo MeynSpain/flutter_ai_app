@@ -25,7 +25,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "autodelete": MessageLookupByLibrary.simpleMessage("Автоудаление"),
         "chats": MessageLookupByLibrary.simpleMessage("Чаты"),
         "contactUs": MessageLookupByLibrary.simpleMessage("Связаться с нами"),
+        "day": MessageLookupByLibrary.simpleMessage("День"),
         "enterRequest": MessageLookupByLibrary.simpleMessage("Введите запрос"),
+        "halfYear": MessageLookupByLibrary.simpleMessage("Пол года"),
+        "month": MessageLookupByLibrary.simpleMessage("Месяц"),
+        "month2": MessageLookupByLibrary.simpleMessage("2 Месяца"),
+        "month3": MessageLookupByLibrary.simpleMessage("3 Месяца"),
+        "never": MessageLookupByLibrary.simpleMessage("Никогда"),
         "newChat": MessageLookupByLibrary.simpleMessage("Новый чат"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage(
             "Политика\nконфиденциальности"),
@@ -34,6 +40,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "share": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "somethingWentWrong":
             MessageLookupByLibrary.simpleMessage("Что то пошло не так"),
-        "subscription": MessageLookupByLibrary.simpleMessage("Подписка")
+        "subscription": MessageLookupByLibrary.simpleMessage("Подписка"),
+        "week": MessageLookupByLibrary.simpleMessage("Неделя"),
+        "week2": MessageLookupByLibrary.simpleMessage("2 Недели"),
+        "week3": MessageLookupByLibrary.simpleMessage("3 Недели")
       };
 }

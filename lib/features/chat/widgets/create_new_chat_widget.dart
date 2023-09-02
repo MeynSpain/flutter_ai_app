@@ -101,6 +101,7 @@ class _CreateNewChatWidgetState extends State<CreateNewChatWidget> {
                           if (widget.isCreate) {
                             getIt<ChatBloc>()
                                 .add(ChatCreateNewChatEvent(chatName: text));
+                            Navigator.of(context).pushNamed('/chat');
                           } else {
                             getIt<ChatBloc>().add(
                               ChatRenameChatNameEvent(name: text, chat: widget.chat!),

@@ -9,5 +9,14 @@
   "privacyPolicy": "Privacy policy",
   "subscription": "Subscription",
   "enterRequest": "Enter a request",
-  "autodelete": "Auto-delete"
+  "autodelete": "Auto-delete",
+  "day": "Day",
+  "week": "Week",
+  "week2": "2 Weeks",
+  "week3": "3 Weeks",
+  "month": "Month",
+  "month2": "2 Months",
+  "month3": "3 Months",
+  "halfYear": "Half a Year",
+  "never": "Never"
 }

@@ -3,9 +3,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_ai/core/injection.dart';
+import 'package:flutter_ai/core/utils/prefs_utils.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:intl/intl.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 class SubScreen extends StatefulWidget {
   const SubScreen({super.key});
@@ -30,12 +32,13 @@ class _SubScreenState extends State<SubScreen> {
     final Stream<List<PurchaseDetails>> purchaseUpdated =
         _inAppPurchase.purchaseStream;
 
+
     _subscription = purchaseUpdated.listen(
       (purchaseDetailsList) {
         setState(() {
           _purchases.addAll(purchaseDetailsList);
           _listenToPurchaseUpdated(purchaseDetailsList);
-          _isSubcribe = _purchases.any((purchase) => purchase.status == PurchaseStatus.purchased);
+          getIt<PrefsUtils>().saveSubcribe(_purchases.any((purchase) => purchase.status == PurchaseStatus.purchased));
         });
       },
       onDone: () {
@@ -114,10 +117,16 @@ class _SubScreenState extends State<SubScreen> {
     log('###### PRODUCTS ######\n${response.toString()}');
 
     if (response.notFoundIDs.isNotEmpty) {
+      // response.productDetails.first.
       getIt<Talker>()
           .error('Продукты не были найдены: ${response.notFoundIDs}');
     }
+    final ProductDetails subscription = response.productDetails.first;
 
+    final GooglePlayPurchaseDetails a;
+    final GooglePlayProductDetails b;
+    final GooglePlayPurchaseParam c;
+    getIt<Talker>().info('${response.productDetails.first.description}');
     // setState(() {
     //   _products = response.productDetails;
     // });
@@ -168,6 +177,7 @@ class _SubScreenState extends State<SubScreen> {
 
   void _subscribe({required ProductDetails product}) {
     final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
+    final GooglePlayPurchaseParam googlePlayPurchaseParam = GooglePlayPurchaseParam(productDetails: product);
     _inAppPurchase.buyNonConsumable(
       purchaseParam: purchaseParam,
     );
@@ -180,7 +190,7 @@ class _SubScreenState extends State<SubScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Подписка ${_isSubcribe ? active : notActive}'),
+        title: Text('Подписка ${getIt<PrefsUtils>().getSubscribe() ? active : notActive}'),
       ),
       body: _available
           ? Column(

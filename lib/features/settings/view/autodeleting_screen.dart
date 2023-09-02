@@ -16,6 +16,13 @@ class AutoDeletingScreen extends StatefulWidget {
 }
 
 class _AutoDeletingScreenState extends State<AutoDeletingScreen> {
+
+  @override
+  void initState() {
+    getIt<SettingsBloc>().add(SettingsAutoDeleteInitial(context: context));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

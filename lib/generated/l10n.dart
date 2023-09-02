@@ -159,6 +159,96 @@ class S {
       args: [],
     );
   }
+
+  /// `Day`
+  String get day {
+    return Intl.message(
+      'Day',
+      name: 'day',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Week`
+  String get week {
+    return Intl.message(
+      'Week',
+      name: 'week',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `2 Weeks`
+  String get week2 {
+    return Intl.message(
+      '2 Weeks',
+      name: 'week2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3 Weeks`
+  String get week3 {
+    return Intl.message(
+      '3 Weeks',
+      name: 'week3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Month`
+  String get month {
+    return Intl.message(
+      'Month',
+      name: 'month',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `2 Months`
+  String get month2 {
+    return Intl.message(
+      '2 Months',
+      name: 'month2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3 Months`
+  String get month3 {
+    return Intl.message(
+      '3 Months',
+      name: 'month3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Half a Year`
+  String get halfYear {
+    return Intl.message(
+      'Half a Year',
+      name: 'halfYear',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Never`
+  String get never {
+    return Intl.message(
+      'Never',
+      name: 'never',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

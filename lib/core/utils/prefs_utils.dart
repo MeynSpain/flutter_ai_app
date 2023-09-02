@@ -13,4 +13,17 @@ class PrefsUtils {
   }
 
   int? getDays() => prefs.getInt(PrefsNames.expirationDate);
+
+  Future<void> saveSubcribe(bool isSubscribe) async {
+    await prefs.setBool(PrefsNames.isSubscribe, isSubscribe);
+  }
+
+  bool getSubscribe() {
+    bool? isSub = prefs.getBool(PrefsNames.isSubscribe);
+    if (isSub == null) {
+      saveSubcribe(false);
+      return false;
+    }
+    return isSub;
+  }
 }
